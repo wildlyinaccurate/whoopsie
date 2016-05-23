@@ -1,0 +1,30 @@
+{
+  "name": "whoopsie",
+  "version": "0.1.0",
+  "description": "Whoopsie is a visual regression tool for testing responsive web sites",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wildlyinaccurate/whoopsie.git"
+  },
+  "keywords": [
+    "visual",
+    "regression",
+    "wraith"
+  ],
+  "author": "Joseph Wynn <joseph@wildlyinaccurate.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wildlyinaccurate/whoopsie/issues"
+  },
+  "homepage": "https://github.com/wildlyinaccurate/whoopsie#readme",
+  "dependencies": {
+    "image-diff": "^1.5.1"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1"
+  }
+}
