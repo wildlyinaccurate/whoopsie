@@ -14,14 +14,11 @@ module.exports = function capture (url, width) {
     let data = []
 
     proc.stdout.on('data', chunk => {
-      data.push(Buffer.from(chunk.toString('ascii'), 'base64'))
+      data.push(Buffer.from(chunk, 'base64'))
     })
 
     proc.on('close', () => {
-      const dataLength = data.reduce((prev, curr) => prev + curr.length, 0)
-      const result = new CaptureResult(url, width, Buffer.concat(data))
-
-      resolve(result)
+      resolve(new CaptureResult(url, width, Buffer.concat(data)))
     })
   })
 }
