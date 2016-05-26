@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Whoopsie is a visual regression tool for testing responsive web sites",
   "main": "src/index.js",
+  "bin": "./src/cli.js",
   "scripts": {
     "test": "eslint src/**/*.js && jasmine"
   },
@@ -23,8 +24,13 @@
   "homepage": "https://github.com/wildlyinaccurate/whoopsie#readme",
   "dependencies": {
     "bluebird": "^3.4.0",
+    "cartesian-product": "^2.1.2",
     "image-diff": "^1.6.0",
-    "phantomjs": "^2.1.7"
+    "js-yaml": "^3.6.1",
+    "lodash-fp": "^0.10.4",
+    "minimist": "^1.2.0",
+    "phantomjs": "^2.1.7",
+    "rimraf": "^2.5.2"
   },
   "devDependencies": {
     "eslint": "^2.10.2",

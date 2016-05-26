@@ -10,8 +10,6 @@ page.viewportSize = {
 }
 
 page.open(url, function () {
-  setTimeout(function() {
-    console.log(page.renderBase64('PNG'))
-    phantom.exit()
-  }, 2000)
+  console.log(page.renderBase64('PNG'))
+  phantom.exit()
 })

@@ -3,22 +3,22 @@ const childProcess = require('child_process')
 const phantomjs = require('phantomjs')
 
 module.exports = function capture (url, width) {
-  const args = [
-    path.join(__dirname, 'driver/phantomjs.js'),
-    url,
-    width
-  ]
-
   return new Promise(resolve => {
+    const args = [
+      path.join(__dirname, 'driver/phantomjs.js'),
+      url,
+      width
+    ]
+
     const proc = childProcess.spawn(phantomjs.path, args)
-    let data = []
+    let chunks = []
 
     proc.stdout.on('data', chunk => {
-      data.push(Buffer.from(chunk, 'base64'))
+      chunks.push(Buffer.from(chunk.toString('ascii'), 'base64'))
     })
 
     proc.on('close', () => {
-      resolve(new CaptureResult(url, width, Buffer.concat(data)))
+      resolve(new CaptureResult(url, width, Buffer.concat(chunks)))
     })
   })
 }

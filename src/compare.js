@@ -1,15 +1,16 @@
 const Promise = require('bluebird')
-const fs = require('fs')
-const writeFile = Promise.promisify(fs.writeFile)
-const readFile = Promise.promisify(fs.readFile)
+const rimraf = require('rimraf')
+const fs = Promise.promisifyAll(require('fs'))
 const diff = Promise.promisify(require('image-diff').getFullResult)
+
+const TMP_DIR = '/tmp/whoopsie-compare-'
 
 module.exports = function compare (capture1, capture2) {
   return new Promise(resolve => {
-    fs.mkdtemp('/tmp/whoopsie-', (err, dir) => {
+    fs.mkdtemp(TMP_DIR, (err, dir) => {
       const createImageFiles = [
-        writeFile(`${dir}/base`, capture1.image, 'binary'),
-        writeFile(`${dir}/new`, capture2.image, 'binary')
+        fs.writeFileAsync(`${dir}/base`, capture1.image, 'binary'),
+        fs.writeFileAsync(`${dir}/new`, capture2.image, 'binary')
       ]
 
       const compareImages = () => diff({
@@ -21,17 +22,25 @@ module.exports = function compare (capture1, capture2) {
 
       Promise.all(createImageFiles)
         .then(compareImages)
-        .then(results => [results, readFile(`${dir}/diff`)])
+        .then(results => [results, fs.readFileAsync(`${dir}/diff`)])
         .all()
         .then(([results, image]) => {
-          resolve(new Diff(results.total, results.percentage, image))
+          const diff = new Diff(
+            results,
+            image,
+            capture1,
+            capture2
+          )
+
+          rimraf(dir, () => resolve(diff))
         })
     })
   })
 }
 
-function Diff (pixels, percentage, image) {
-  this.pixels = pixels
-  this.percentage = percentage
+function Diff (results, image, base, test) {
+  this.results = results
   this.image = image
+  this.base = base
+  this.test = test
 }
