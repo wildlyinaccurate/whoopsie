@@ -1,5 +1,7 @@
 # Whoopsie
 
+[![Build Status](https://travis-ci.org/wildlyinaccurate/whoopsie.svg?branch=master)](https://travis-ci.org/wildlyinaccurate/whoopsie)
+
 Whoopsie is a visual regression tool for testing responsive web sites.
 
 ## Installation
