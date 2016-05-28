@@ -6,8 +6,12 @@ const diff = Promise.promisify(require('image-diff').getFullResult)
 const TMP_DIR = '/tmp/whoopsie-compare-'
 
 module.exports = function compare (capture1, capture2) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     fs.mkdtemp(TMP_DIR, (err, dir) => {
+      if (err) {
+        reject(err)
+      }
+
       const createImageFiles = [
         fs.writeFileAsync(`${dir}/base`, capture1.image, 'binary'),
         fs.writeFileAsync(`${dir}/new`, capture2.image, 'binary')
