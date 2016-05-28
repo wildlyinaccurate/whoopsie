@@ -6,7 +6,7 @@
   "bin": "./src/cli.js",
   "scripts": {
     "test": "npm run eslint && npm run jasmine",
-    "eslint": "eslint {src,spec}/**/*.js",
+    "eslint": "eslint src/ spec/",
     "jasmine": "if [ -z $TRAVIS_JOB_ID ]; then jasmine; else npm run jasmine-coveralls; fi",
     "jasmine-coveralls": "istanbul cover jasmine && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
   },

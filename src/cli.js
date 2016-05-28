@@ -14,7 +14,7 @@ switch (command) {
       .then(yaml.safeLoad)
       .then(test)
 
-    break;
+    break
 
   default:
     if (argv.version) {
