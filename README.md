@@ -1,7 +1,7 @@
 # Whoopsie
 
-[![Build Status](https://travis-ci.org/wildlyinaccurate/whoopsie.svg?branch=master)](https://travis-ci.org/wildlyinaccurate/whoopsie)
-[![Coverage Status](https://coveralls.io/repos/github/wildlyinaccurate/whoopsie/badge.svg?branch=write-some-tests)](https://coveralls.io/github/wildlyinaccurate/whoopsie?branch=write-some-tests)
+[![Build Status](https://img.shields.io/travis/wildlyinaccurate/whoopsie.svg?style=flat-square)](https://travis-ci.org/wildlyinaccurate/whoopsie)
+[![Coverage Status](https://img.shields.io/coveralls/wildlyinaccurate/whoopsie.svg?style=flat-square)](https://coveralls.io/repos/github/wildlyinaccurate/whoopsie/badge.svg?branch=master)
 
 Whoopsie is a visual regression tool for testing responsive web sites.
 
