@@ -6,5 +6,8 @@
     "installedESLint": true,
     "plugins": [
         "standard"
-    ]
+    ],
+    "rules": {
+        "arrow-parens": ["error", "as-needed"]
+    }
 }

@@ -18,14 +18,12 @@ describe('whoopsie test', () => {
     compareSpy.calls.reset()
   })
 
-  it('should capture all permutations', (done) => {
-    const p = test({
+  it('should capture all permutations', done => {
+    test({
       sites: ['http://localhost/live', 'http://localhost/test'],
       widths: [100, 120],
       urls: ['/1', '/2']
-    })
-
-    p.then(() => {
+    }).then(() => {
       expect(captureSpy.calls.argsFor(0)).toEqual(['http://localhost/live/1', 100])
       expect(captureSpy.calls.argsFor(1)).toEqual(['http://localhost/test/1', 100])
       expect(captureSpy.calls.argsFor(2)).toEqual(['http://localhost/live/1', 120])
@@ -40,14 +38,12 @@ describe('whoopsie test', () => {
     })
   })
 
-  it('should compare the correct captures', (done) => {
-    const p = test({
+  it('should compare the correct captures', done => {
+    test({
       sites: ['http://localhost/live', 'http://localhost/test'],
       widths: [100],
       urls: ['/1', '/2']
-    })
-
-    p.then(() => {
+    }).then(() => {
       expect(compareSpy.calls.argsFor(0)).toEqual([
         ['http://localhost/live/1', 100],
         ['http://localhost/test/1', 100]
