@@ -17,6 +17,8 @@ $ npm install -g whoopsie
 $ whoopsie test path/to/config.yaml
 ```
 
+> **Note:** Whoopsie requires Node.js v6.0 or higher to run.
+
 ## Configuration
 
 See [config/sample.yaml](./config/sample.yaml) for a sample configuration file.
