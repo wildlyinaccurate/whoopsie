@@ -12,7 +12,7 @@ const mockDiff = captures => {
 
 const captureSpy = jasmine.createSpy('capture').and.callFake(mockCapture)
 const compareSpy = jasmine.createSpy('compare').and.callFake(mockDiff)
-const gallerySpy = jasmine.createSpy('gallery')
+const gallerySpy = jasmine.createSpy('gallery').and.returnValue(Promise.resolve(null))
 
 const test = proxyquire('../../src/cli/test', {
   '../capture': captureSpy,
@@ -73,7 +73,7 @@ describe('whoopsie test', () => {
       widths: [100],
       urls: ['/1', '/2'],
       galleryDir: '/tmp',
-      failure_threshold: 10
+      failureThreshold: 10
     }).then(() => {
       const capture1 = mockCapture('http://localhost/live/1', 100)
       const capture2 = mockCapture('http://localhost/test/1', 100)
