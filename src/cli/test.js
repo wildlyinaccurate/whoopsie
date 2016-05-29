@@ -1,39 +1,51 @@
 const _ = require('lodash/fp')
-const Promise = require('bluebird')
+const os = require('os')
+const Queue = require('queue')
 const product = require('cartesian-product')
-// const queue = require('queue')
 const capture = require('../capture')
 const compare = require('../compare')
 const gallery = require('../gallery')
 
-const makeGallery = config => diffs => gallery(config.galleryDir, diffs, config.failureThreshold)
+module.exports = function test (config, argv) {
+  const concurrency = _.getOr(os.cpus().length, 'concurrency', argv)
+  const q = new Queue({ concurrency })
 
-module.exports = function test (config) {
-  return Promise.all(makeCaptures(config))
-    .then(_.chunk(2))
-    .then(_.map(diffPairs))
-    .all()
-    .then(makeGallery(config))
+  const captureOpts = _.pick(['ignoreSelectors', 'renderWaitTime'], config)
+  const testPairs = _.chunk(2, testPermutations(config))
+  const diffs = []
+
+  testPairs.forEach(pair => {
+    q.push(cb => {
+      capturePair(pair, captureOpts)
+        .then(diffCaptures)
+        .then(diff => cb(null, diff))
+    })
+  })
+
+  q.on('success', res => diffs.push(res))
+
+  return new Promise(resolve => {
+    q.start(() => {
+      gallery(config.galleryDir, diffs, config.failureThreshold)
+        .then(resolve)
+    })
+  })
 }
 
-const flatten = xs => [].concat.apply([], xs)
-
-function makeCaptures (config) {
-  const tests = product([
+function testPermutations (config) {
+  return product([
     config.urls,
-    config.widths
+    config.widths,
+    config.sites.slice(0, 2)
   ])
-
-  const opts = _.pick(['ignoreSelectors', 'renderWaitTime'], config)
-
-  const capturePairs = tests.map(([url, width]) => [
-    capture(config.sites[0] + url, width, opts),
-    capture(config.sites[1] + url, width, opts)
-  ])
-
-  return flatten(capturePairs)
 }
 
-function diffPairs ([base, test]) {
+function capturePair (pair, opts) {
+  const makeCapture = ([url, width, site]) => capture(site + url, width, opts)
+
+  return Promise.all(pair.map(makeCapture))
+}
+
+function diffCaptures ([base, test]) {
   return compare(base, test)
 }

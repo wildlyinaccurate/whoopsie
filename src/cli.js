@@ -12,7 +12,7 @@ switch (command) {
 
     readFile(configPath, 'utf8')
       .then(yaml.safeLoad)
-      .then(test)
+      .then(config => test(config, argv))
 
     break
 

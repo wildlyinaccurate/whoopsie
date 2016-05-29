@@ -17,6 +17,12 @@ $ npm install -g whoopsie
 $ whoopsie test path/to/config.yaml
 ```
 
+### Options
+
+| Name            | Default value      | Description                          |
+|-----------------|--------------------|--------------------------------------|
+| `--concurrency` | `os.cpus().length` | Number of tests to run cooncurrently |
+
 > **Note:** Whoopsie requires Node.js v6.0 or higher to run.
 
 ## Configuration
