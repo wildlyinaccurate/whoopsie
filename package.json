@@ -30,8 +30,9 @@
     "cartesian-product": "^2.1.2",
     "image-diff": "^1.6.0",
     "js-yaml": "^3.6.1",
-    "lodash-fp": "^0.10.4",
+    "lodash": "^4.13.1",
     "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
     "phantomjs": "^2.1.7",
     "rimraf": "^2.5.2"
   },
