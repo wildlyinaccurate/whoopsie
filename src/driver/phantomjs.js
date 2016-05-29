@@ -7,7 +7,7 @@ var options = JSON.parse(args[3])
 
 page.viewportSize = {
   width: width,
-  height: width
+  height: width * 2
 }
 
 page.open(url, function () {
