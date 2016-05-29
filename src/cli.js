@@ -2,9 +2,16 @@ const Promise = require('bluebird')
 const readFile = Promise.promisify(require('fs').readFile)
 const yaml = require('js-yaml')
 
+const Log = require('log')
+const log = require('./log')
+
 const test = require('./cli/test')
 const argv = require('minimist')(process.argv.slice(2))
 const command = argv._[0]
+
+if (argv.verbose) {
+  log.level = Log.DEBUG
+}
 
 switch (command) {
   case 'test':

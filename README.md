@@ -22,6 +22,7 @@ $ whoopsie test path/to/config.yaml
 | Name            | Default value      | Description                          |
 |-----------------|--------------------|--------------------------------------|
 | `--concurrency` | `os.cpus().length` | Number of tests to run cooncurrently |
+| `--verbose`     | `<Off>`            | Enable verbose output                |
 
 > **Note:** Whoopsie requires Node.js v6.0 or higher to run.
 
