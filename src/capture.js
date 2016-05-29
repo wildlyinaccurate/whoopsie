@@ -1,13 +1,22 @@
+const _ = require('lodash')
 const path = require('path')
 const childProcess = require('child_process')
 const phantomjs = require('phantomjs')
 
-module.exports = function capture (url, width) {
+const DEFAULT_OPTIONS = {
+  ignoreSelectors: [],
+  renderWaitTime: 1000
+}
+
+module.exports = function capture (url, width, userOpts = {}) {
+  const options = _.merge(DEFAULT_OPTIONS, userOpts)
+
   return new Promise(resolve => {
     const args = [
       path.join(__dirname, 'driver/phantomjs.js'),
       url,
-      width
+      width,
+      JSON.stringify(options)
     ]
 
     const proc = childProcess.spawn(phantomjs.path, args)

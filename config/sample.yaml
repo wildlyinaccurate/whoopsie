@@ -15,6 +15,16 @@ urls:
   - /technology
   - /technology-36387563
 
+# List of CSS selectors to hide (display: none) before capturing a screenshot
+ignoreSelectors:
+  - '#blq-global'
+  - '#orb-header'
+  - '#orb-footer'
+  - '#breaking-news-container'
+
+# How long (in milliseconds) to wait before capturing a screenshot
+renderWaitTime: 3000
+
 # How different two pages should be (as a percentage) for a test to fail
 failure_threshold: 10
 

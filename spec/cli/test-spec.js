@@ -33,15 +33,15 @@ describe('whoopsie test', () => {
       widths: [100, 120],
       urls: ['/1', '/2']
     }).then(() => {
-      expect(captureSpy.calls.argsFor(0)).toEqual(['http://localhost/live/1', 100])
-      expect(captureSpy.calls.argsFor(1)).toEqual(['http://localhost/test/1', 100])
-      expect(captureSpy.calls.argsFor(2)).toEqual(['http://localhost/live/1', 120])
-      expect(captureSpy.calls.argsFor(3)).toEqual(['http://localhost/test/1', 120])
+      expect(captureSpy.calls.argsFor(0)).toEqual(['http://localhost/live/1', 100, {}])
+      expect(captureSpy.calls.argsFor(1)).toEqual(['http://localhost/test/1', 100, {}])
+      expect(captureSpy.calls.argsFor(2)).toEqual(['http://localhost/live/1', 120, {}])
+      expect(captureSpy.calls.argsFor(3)).toEqual(['http://localhost/test/1', 120, {}])
 
-      expect(captureSpy.calls.argsFor(4)).toEqual(['http://localhost/live/2', 100])
-      expect(captureSpy.calls.argsFor(5)).toEqual(['http://localhost/test/2', 100])
-      expect(captureSpy.calls.argsFor(6)).toEqual(['http://localhost/live/2', 120])
-      expect(captureSpy.calls.argsFor(7)).toEqual(['http://localhost/test/2', 120])
+      expect(captureSpy.calls.argsFor(4)).toEqual(['http://localhost/live/2', 100, {}])
+      expect(captureSpy.calls.argsFor(5)).toEqual(['http://localhost/test/2', 100, {}])
+      expect(captureSpy.calls.argsFor(6)).toEqual(['http://localhost/live/2', 120, {}])
+      expect(captureSpy.calls.argsFor(7)).toEqual(['http://localhost/test/2', 120, {}])
 
       done()
     })
