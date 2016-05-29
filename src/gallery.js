@@ -15,7 +15,9 @@ module.exports = function gallery (baseDir, diffs, failureThreshold) {
 
       return template({
         results,
-        summary: makeSummary(results)
+        summary: makeSummary(results),
+        failureThreshold,
+        time: new Date()
       })
     })
     .then(html => [html, mkdirp(galleryDir)])

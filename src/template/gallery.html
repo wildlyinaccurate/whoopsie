@@ -11,6 +11,10 @@
             box-sizing: border-box;
         }
 
+        body {
+            color: #403f4c;
+        }
+
         .p-1 {
             padding: 1em;
         }
@@ -23,8 +27,8 @@
             color: #31b485;
         }
 
-        .dark {
-            color: #403f4c;
+        .light-bg {
+            background: #f6f8f9;
         }
     </style>
 </head>
@@ -35,9 +39,12 @@
 
             <h2>
                 <span class="green"><%= summary.passes %> passes</span> /
-                <span class="red"><%= summary.failures %> failures</span> /
-                <span><%= summary.total %> total</span>
+                <span class="red"><%= summary.failures %> failures</span>
             </h2>
+
+            <p class="light-bg p-1">
+                <b><%= summary.total %></b> tests run at <b><%= time %></b> with <b><%= failureThreshold %>%</b> failure threshold
+            </p>
         </div>
     </div>
 
