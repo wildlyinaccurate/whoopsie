@@ -34,7 +34,7 @@ describe('capture()', () => {
     ]))
   })
 
-  it('should take base64 chunks from stdout', (done) => {
+  it('should take base64 chunks from stdout', done => {
     const p = capture('http://localhost/', 200)
     const b1 = Buffer.from('Hello, ')
     const b2 = Buffer.from('world!')
