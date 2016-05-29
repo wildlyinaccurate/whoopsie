@@ -22,3 +22,11 @@ $ whoopsie test path/to/config.yaml
 ## Configuration
 
 See [config/sample.yaml](./config/sample.yaml) for a sample configuration file.
+
+## Example Output
+
+[![](./example-output.png)](./example-output.png)
+
+## License
+
+[ISC](./LICENSE)
