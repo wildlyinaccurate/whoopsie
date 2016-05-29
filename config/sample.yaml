@@ -1,11 +1,11 @@
 # Two URLs to run tests against. The first is considered to be the baseline
 sites:
-  - https://www.bbc.co.uk/news
-  - https://www.test.bbc.co.uk/news
+  - http://www.bbc.co.uk/news
+  - http://www.test.bbc.co.uk/news
 
 # Screen widths to run tests at
 widths:
-  - 420
+  - 320
   - 680
   - 1040
 
