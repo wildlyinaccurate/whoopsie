@@ -1,4 +1,4 @@
-const _ = require('lodash')
+const _ = require('lodash/fp')
 const Promise = require('bluebird')
 const fs = Promise.promisifyAll(require('fs'))
 const mkdirp = Promise.promisify(require('mkdirp'))
@@ -8,21 +8,18 @@ const crypto = require('crypto')
 module.exports = function gallery (baseDir, diffs, failureThreshold) {
   const galleryDir = path.join(baseDir, galleryName())
 
-  return fs.readFileAsync(templatePath(), 'utf8')
+  return mkdirp(galleryDir)
+    .then(() => fs.readFileAsync(templatePath(), 'utf8'))
     .then(_.template)
-    .then(template => {
-      const results = processDiffs(diffs, failureThreshold)
-
-      return template({
-        results,
-        summary: makeSummary(results),
-        failureThreshold,
-        time: new Date()
-      })
-    })
-    .then(html => [html, mkdirp(galleryDir)])
+    .then(template => [template, processDiffs(galleryDir, diffs, failureThreshold)])
     .all()
-    .then(([html]) => fs.writeFileAsync(path.join(galleryDir, 'index.html'), html))
+    .then(([template, results]) => template({
+      results,
+      summary: makeSummary(results),
+      failureThreshold,
+      time: new Date()
+    }))
+    .then(html => fs.writeFileAsync(path.join(galleryDir, 'index.html'), html))
 }
 
 function templatePath () {
@@ -31,20 +28,34 @@ function templatePath () {
 
 function makeSummary (diffs) {
   const total = diffs.length
-  const failures = _.filter(diffs, 'failed').length
+  const failures = _.filter('failed', diffs).length
   const passes = total - failures
 
   return { total, failures, passes }
 }
 
-function processDiffs (diffs, failureThreshold) {
-  const annotated = diffs.map(diff => {
-    diff.failed = diff.results.percentage >= (failureThreshold / 100)
+function processDiffs (galleryDir, diffs, failureThreshold) {
+  return Promise.all(diffs.map(saveImages.bind(this, galleryDir)))
+    .then(_.map(setFailed.bind(this, failureThreshold)))
+    .then(_.orderBy('results.percentage', 'desc'))
+}
 
-    return diff
-  })
+function setFailed (failureThreshold, diff) {
+  diff.failed = diff.results.percentage >= (failureThreshold / 100)
 
-  return _.orderBy(annotated, 'results.percentage', 'desc')
+  return diff
+}
+
+function saveImages (baseDir, diff, index) {
+  diff.base.image.path = `base-${index}.png`
+  diff.test.image.path = `test-${index}.png`
+  diff.image.path = `diff-${index}.png`
+
+  return Promise.all([
+    fs.writeFileAsync(path.join(baseDir, diff.base.image.path), diff.base.image),
+    fs.writeFileAsync(path.join(baseDir, diff.test.image.path), diff.test.image),
+    fs.writeFileAsync(path.join(baseDir, diff.image.path), diff.image)
+  ]).then(() => diff)
 }
 
 function galleryName () {

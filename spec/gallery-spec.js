@@ -6,7 +6,7 @@ const proxyquire = require('proxyquire')
 const templateSpy = jasmine.createSpy('template').and.returnValue('MOCK HTML')
 
 const gallery = proxyquire('../src/gallery', {
-  'lodash': {
+  'lodash/fp': {
     template: () => templateSpy
   }
 })
@@ -15,8 +15,8 @@ const mockDiff = percentage => {
   return {
     results: { percentage },
     image: {},
-    base: {},
-    test: {}
+    base: { image: {} },
+    test: { image: {} }
   }
 }
 
