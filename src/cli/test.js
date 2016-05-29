@@ -24,9 +24,11 @@ function makeCaptures (config) {
     config.widths
   ])
 
+  const opts = _.pick(['ignoreSelectors', 'renderWaitTime'], config)
+
   const capturePairs = tests.map(([url, width]) => [
-    capture(config.sites[0] + url, width, config),
-    capture(config.sites[1] + url, width, config)
+    capture(config.sites[0] + url, width, opts),
+    capture(config.sites[1] + url, width, opts)
   ])
 
   return flatten(capturePairs)
