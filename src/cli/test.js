@@ -25,8 +25,8 @@ function makeCaptures (config) {
   ])
 
   const capturePairs = tests.map(([url, width]) => [
-    capture(config.sites[0] + url, width),
-    capture(config.sites[1] + url, width)
+    capture(config.sites[0] + url, width, config),
+    capture(config.sites[1] + url, width, config)
   ])
 
   return flatten(capturePairs)
