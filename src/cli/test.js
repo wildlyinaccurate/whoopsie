@@ -6,7 +6,7 @@ const capture = require('../capture')
 const compare = require('../compare')
 const gallery = require('../gallery')
 
-const makeGallery = config => diffs => gallery(config.gallery_dir, diffs, config.failure_threshold)
+const makeGallery = config => diffs => gallery(config.galleryDir, diffs, config.failureThreshold)
 
 module.exports = function test (config) {
   return Promise.all(makeCaptures(config))

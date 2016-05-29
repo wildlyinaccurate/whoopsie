@@ -72,7 +72,7 @@ describe('whoopsie test', () => {
       sites: ['http://localhost/live', 'http://localhost/test'],
       widths: [100],
       urls: ['/1', '/2'],
-      gallery_dir: '/tmp',
+      galleryDir: '/tmp',
       failure_threshold: 10
     }).then(() => {
       const capture1 = mockCapture('http://localhost/live/1', 100)

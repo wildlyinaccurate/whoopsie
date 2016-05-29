@@ -25,8 +25,11 @@ ignoreSelectors:
 # How long (in milliseconds) to wait before capturing a screenshot
 renderWaitTime: 3000
 
+# Directory in which to save test results
+galleryDir: results/
+
 # How different two pages should be (as a percentage) for a test to fail
-failure_threshold: 10
+failureThreshold: 10
 
 # How much fuzz should be applied when calculating differences
 # See http://www.imagemagick.org/Usage/color_basics/#fuzz for a full explanation
