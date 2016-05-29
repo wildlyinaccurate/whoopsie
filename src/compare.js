@@ -2,11 +2,14 @@ const Promise = require('bluebird')
 const rimraf = require('rimraf')
 const fs = Promise.promisifyAll(require('fs'))
 const diff = Promise.promisify(require('image-diff').getFullResult)
+const log = require('./log')
 
 const TMP_DIR = '/tmp/whoopsie-compare-'
 
 module.exports = function compare (capture1, capture2) {
   return new Promise((resolve, reject) => {
+    log.info(`Comparing captures of ${capture1.url} and ${capture2.url} at ${capture1.width}px`)
+
     fs.mkdtemp(TMP_DIR, (err, dir) => {
       if (err) {
         reject(err)
