@@ -1,4 +1,4 @@
-const config = require('../../src/config')
+const config = require('../src/config')
 
 const minimumValidConfig = {
   sites: ['site1', 'site2'],
@@ -18,7 +18,7 @@ describe('config.validateFile()', () => {
   })
 
   it('should reject when the file does not exist', done => {
-    config(validateFile('-')).catch(done)
+    config.validateFile('-').catch(done)
   })
 })
 
