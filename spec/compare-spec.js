@@ -1,4 +1,7 @@
-const compare = require('../src/compare')
+const proxyquire = require('proxyquire')
+const compare = proxyquire('../src/compare', {
+  './trim': x => Promise.resolve(x)
+})
 
 describe('compare()', () => {
   it('should compare two captures', done => {
