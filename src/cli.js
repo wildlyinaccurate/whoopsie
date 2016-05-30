@@ -1,3 +1,4 @@
+const pkg = require('../package.json')
 const Log = require('log')
 const log = require('./log')
 
@@ -26,19 +27,24 @@ switch (command) {
 
     break
 
+  case 'version':
+    console.log(pkg.version)
+    break
+
+  case 'help':
   default:
-    if (argv.version) {
-      console.log(require('../package.json').version)
-    } else {
-      usage()
-    }
+    usage()
 }
 
 function usage () {
   console.log(`
-  Usage:
+Whoopsie v${pkg.version}
+
+Usage:
 
   whoopsie test <path>              Run visual regression tests using configuration at <path>
   whoopsie validate-config <path>   Validate configuration at <path>
+  whoopsie version                  Show the program version
+  whoopsie help                     Show this message
   `)
 }
