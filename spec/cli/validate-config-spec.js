@@ -1,4 +1,4 @@
-const validate = require('../../src/config').validate
+const config = require('../../src/config')
 
 const minimumValidConfig = {
   sites: ['site1', 'site2'],
@@ -8,9 +8,19 @@ const minimumValidConfig = {
   failureThreshold: 10
 }
 
+describe('config.validateFile()', () => {
+  it('should accept a valid config file', done => {
+    config.validateFile('config/sample.yaml').then(done)
+  })
+
+  it('should reject an invalid config file', done => {
+    config.validateFile('spec/support/invalid-config.yaml').catch(done)
+  })
+})
+
 describe('config.validate()', () => {
   it('should accept a minimum valid config', done => {
-    validate(minimumValidConfig)
+    config.validate(minimumValidConfig)
       .then(actualConfig => {
         expect(actualConfig).toEqual(minimumValidConfig)
         done()
@@ -18,41 +28,41 @@ describe('config.validate()', () => {
   })
 
   it('should reject config with no sites', done => {
-    validate(modifyConfig({ sites: [] })).catch(done)
+    config.validate(modifyConfig({ sites: [] })).catch(done)
   })
 
   it('should reject config with one site', done => {
-    validate(modifyConfig({ sites: ['site1'] })).catch(done)
+    config.validate(modifyConfig({ sites: ['site1'] })).catch(done)
   })
 
   it('should reject config with more than two sites', done => {
-    validate(modifyConfig({ sites: ['site1', 'site2', 'site3'] })).catch(done)
+    config.validate(modifyConfig({ sites: ['site1', 'site2', 'site3'] })).catch(done)
   })
 
   it('should reject config with no widths', done => {
-    validate(modifyConfig({ widths: [] })).catch(done)
+    config.validate(modifyConfig({ widths: [] })).catch(done)
   })
 
   it('should reject config with no urls', done => {
-    validate(modifyConfig({ urls: [] })).catch(done)
+    config.validate(modifyConfig({ urls: [] })).catch(done)
   })
 
   it('should reject config with no galleryDir', done => {
-    const config = modifyConfig({})
-    delete config.galleryDir
+    const invalidConfig = modifyConfig({})
+    delete invalidConfig.galleryDir
 
-    validate(config).catch(done)
+    config.validate(invalidConfig).catch(done)
   })
 
   it('should reject config with no failureThreshold', done => {
-    const config = modifyConfig({})
-    delete config.failureThreshold
+    const invalidConfig = modifyConfig({})
+    delete invalidConfig.failureThreshold
 
-    validate(config).catch(done)
+    config.validate(invalidConfig).catch(done)
   })
 
   it('should accept a config with optional values', done => {
-    validate(modifyConfig({ ignoreSelectors: ['.foo'], renderWaitTime: 2000, fuzz: 5 })).then(done)
+    config.validate(modifyConfig({ ignoreSelectors: ['.foo'], renderWaitTime: 2000, fuzz: 5 })).then(done)
   })
 })
 

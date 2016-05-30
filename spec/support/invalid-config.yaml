@@ -1,0 +1,21 @@
+sites:
+  - http://www.bbc.co.uk/news
+
+widths:
+  - 320
+  - 600
+
+urls:
+  - /
+  - /technology
+  - /technology-36387563
+
+ignoreSelectors:
+
+renderWaitTime: 3000
+
+galleryDir: results/
+
+failureThreshold: 10
+
+fuzz: 5
