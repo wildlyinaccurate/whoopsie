@@ -1,8 +1,10 @@
+const _ = require('lodash')
 const Promise = require('bluebird')
 const rimraf = require('rimraf')
 const fs = Promise.promisifyAll(require('fs'))
 const diff = Promise.promisify(require('image-diff').getFullResult)
 const log = require('./log')
+const trim = require('./trim')
 
 const TMP_DIR = '/tmp/whoopsie-compare-'
 
@@ -15,21 +17,32 @@ module.exports = function compare (capture1, capture2) {
         reject(err)
       }
 
-      const createImageFiles = [
-        fs.writeFileAsync(`${dir}/base`, capture1.image, 'binary'),
-        fs.writeFileAsync(`${dir}/new`, capture2.image, 'binary')
+      const baseFile = `${dir}/base`
+      const testFile = `${dir}/test`
+      const diffFile = `${dir}/diff`
+
+      const trimImages = [
+        trim(capture1.image).then(data => _.set(capture1, 'image', data)),
+        trim(capture2.image).then(data => _.set(capture2, 'image', data))
+      ]
+
+      const createImageFiles = () => [
+        fs.writeFileAsync(baseFile, capture1.image, 'binary'),
+        fs.writeFileAsync(testFile, capture2.image, 'binary')
       ]
 
       const compareImages = () => diff({
-        expectedImage: `${dir}/base`,
-        actualImage: `${dir}/new`,
-        diffImage: `${dir}/diff`,
+        expectedImage: baseFile,
+        actualImage: testFile,
+        diffImage: diffFile,
         shadow: true
       })
 
-      Promise.all(createImageFiles)
+      Promise.all(trimImages)
+        .then(createImageFiles)
+        .all()
         .then(compareImages)
-        .then(results => [results, fs.readFileAsync(`${dir}/diff`)])
+        .then(results => [results, fs.readFileAsync(diffFile)])
         .all()
         .then(([results, image]) => {
           const diff = new Diff(

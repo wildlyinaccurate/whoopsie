@@ -23,14 +23,14 @@ module.exports = function capture (url, width, userOpts = {}) {
     ]
 
     const proc = childProcess.spawn(phantomjs.path, args)
-    let chunks = []
+    const imageData = []
 
     proc.stdout.on('data', chunk => {
-      chunks.push(Buffer.from(chunk.toString('ascii'), 'base64'))
+      imageData.push(Buffer.from(chunk.toString('ascii'), 'base64'))
     })
 
     proc.on('close', () => {
-      resolve(new CaptureResult(url, width, Buffer.concat(chunks)))
+      resolve(new CaptureResult(url, width, Buffer.concat(imageData)))
     })
   })
 }
