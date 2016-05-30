@@ -6,8 +6,8 @@ sites:
 # Screen widths to run tests at
 widths:
   - 320
-  - 680
-  - 1040
+  - 600
+  - 1020
 
 # List of paths to test (relative to site URLs)
 urls:
