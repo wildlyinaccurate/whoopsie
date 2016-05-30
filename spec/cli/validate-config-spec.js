@@ -16,6 +16,10 @@ describe('config.validateFile()', () => {
   it('should reject an invalid config file', done => {
     config.validateFile('spec/support/invalid-config.yaml').catch(done)
   })
+
+  it('should reject when the file does not exist', done => {
+    config(validateFile('-')).catch(done)
+  })
 })
 
 describe('config.validate()', () => {
