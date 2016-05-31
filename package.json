@@ -34,7 +34,7 @@
     "log": "^1.4.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.7",
     "queue": "^4.0.0",
     "rimraf": "^2.5.2",
     "validate": "^3.0.1"
