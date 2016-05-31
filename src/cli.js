@@ -5,35 +5,36 @@ const log = require('./log')
 const test = require('./cli/test')
 const config = require('./config')
 
-const argv = require('minimist')(process.argv.slice(2))
-const command = argv._[0]
+module.exports = function cli (argv) {
+  const command = argv._[0]
 
-if (argv.verbose) {
-  log.level = Log.DEBUG
-}
+  if (argv.verbose) {
+    log.level = Log.DEBUG
+  }
 
-switch (command) {
-  case 'test':
-    config.validateFile(argv._[1])
-      .then(config => test(config, argv))
-      .catch(err => console.error(`Error: ${err.message}`))
+  switch (command) {
+    case 'test':
+      config.validateFile(argv._[1])
+        .then(config => test(config, argv))
+        .catch(err => console.error(`Error: ${err.message}`))
 
-    break
+      break
 
-  case 'validate-config':
-    config.validateFile(argv._[1])
-      .then(() => console.log('Configuration is valid.'))
-      .catch(err => console.error(err.message))
+    case 'validate-config':
+      config.validateFile(argv._[1])
+        .then(() => console.log('Configuration is valid.'))
+        .catch(err => console.error(err.message))
 
-    break
+      break
 
-  case 'version':
-    console.log(pkg.version)
-    break
+    case 'version':
+      console.log(pkg.version)
+      break
 
-  case 'help':
-  default:
-    usage()
+    case 'help':
+    default:
+      usage()
+  }
 }
 
 function usage () {

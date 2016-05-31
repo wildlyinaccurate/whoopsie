@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "Whoopsie is a visual regression tool for testing responsive web sites",
   "main": "src/index.js",
-  "bin": "./src/cli.js",
+  "bin": "./bin/whoopsie.js",
   "scripts": {
     "test": "npm run eslint && npm run jasmine",
     "eslint": "eslint src/ spec/",
