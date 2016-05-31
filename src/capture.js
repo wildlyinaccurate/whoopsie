@@ -1,7 +1,7 @@
 const _ = require('lodash')
 const path = require('path')
 const childProcess = require('child_process')
-const phantomjs = require('phantomjs')
+const phantomjs = require('phantomjs-prebuilt')
 const log = require('./log')
 
 const DEFAULT_OPTIONS = {
