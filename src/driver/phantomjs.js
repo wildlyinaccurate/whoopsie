@@ -10,6 +10,10 @@ page.viewportSize = {
   height: width * 2
 }
 
+page.onError = page.onConsoleMessage = function () {
+  // Prevent messages and errors from piping to stdout
+}
+
 page.open(url, function () {
   setTimeout(function () {
     page.evaluate(function (options) {
