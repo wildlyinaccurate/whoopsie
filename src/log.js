@@ -1,4 +1,5 @@
 const format = require('util').format
+const console = require('console')
 const Log = require('log')
 const log = new Log('error')
 
