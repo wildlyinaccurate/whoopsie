@@ -5,12 +5,15 @@ const mkdirp = Promise.promisify(require('mkdirp'))
 const path = require('path')
 const crypto = require('crypto')
 const log = require('./log')
+const identifier = require('./identifier')
 
 module.exports = function gallery (baseDir, diffs, failureThreshold) {
+  const galleryId = identifier('gallery')
   const galleryDir = path.join(baseDir, galleryName())
   const galleryIndexPath = path.join(galleryDir, 'index.html')
 
   log.info(`Generating gallery for ${diffs.length} results`)
+  log.time(galleryId)
 
   return mkdirp(galleryDir)
     .then(() => fs.readFileAsync(templatePath(), 'utf8'))
@@ -24,7 +27,10 @@ module.exports = function gallery (baseDir, diffs, failureThreshold) {
       time: new Date()
     }))
     .then(html => fs.writeFileAsync(galleryIndexPath, html))
-    .then(log.info(`Gallery written to ${galleryIndexPath}`))
+    .then(() => {
+      log.info(`Gallery written to ${galleryIndexPath}`)
+      log.timeEnd(galleryId)
+    })
 }
 
 function templatePath () {
