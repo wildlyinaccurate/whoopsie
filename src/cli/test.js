@@ -4,7 +4,6 @@ const Queue = require('queue')
 const product = require('cartesian-product')
 const capture = require('../capture')
 const compare = require('../compare')
-const gallery = require('../gallery')
 
 module.exports = function test (config, argv) {
   const concurrency = _.getOr(os.cpus().length, 'concurrency', argv)
@@ -24,12 +23,9 @@ module.exports = function test (config, argv) {
 
   q.on('success', res => diffs.push(res))
 
-  return new Promise(resolve => {
-    q.start(() => {
-      gallery(config.galleryDir, diffs, config.failureThreshold)
-        .then(resolve)
-    })
-  })
+  return new Promise(resolve =>
+    q.start(() => resolve(diffs))
+  )
 }
 
 function testPermutations (config) {

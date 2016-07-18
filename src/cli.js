@@ -2,6 +2,7 @@ const pkg = require('../package.json')
 const Log = require('log')
 const log = require('./log')
 
+const gallery = require('./cli/gallery')
 const test = require('./cli/test')
 const config = require('./config')
 
@@ -13,9 +14,18 @@ module.exports = function cli (argv) {
   }
 
   switch (command) {
+    case 'gallery':
+      config.validateFile(argv._[1])
+        .then(config => gallery(config, argv))
+        .catch(err => console.error(`Error: ${err.message}`))
+
+      break
+
     case 'test':
       config.validateFile(argv._[1])
         .then(config => test(config, argv))
+        .then(results => JSON.stringify(results, null, 4))
+        .then(console.log)
         .catch(err => console.error(`Error: ${err.message}`))
 
       break
@@ -43,7 +53,8 @@ Whoopsie v${pkg.version}
 
 Usage:
 
-  whoopsie test <path>              Run visual regression tests using configuration at <path>
+  whoopsie gallery <path>           Run visual regression tests and generate comparison gallery using configuration at <path>
+  whoopsie test <path>              Run visual regression tests and output raw JSON results using configuration at <path>
   whoopsie validate-config <path>   Validate configuration at <path>
   whoopsie version                  Show the program version
   whoopsie help                     Show this message
