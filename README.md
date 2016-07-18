@@ -14,7 +14,18 @@ $ npm install -g whoopsie
 ## Usage
 
 ```
-$ whoopsie test path/to/config.yaml
+$ whoopsie gallery path/to/config.yaml
+```
+
+## Docker
+
+If you prefer to run Whoopsie in a container, you can use the official Docker image:
+
+```
+$ docker pull wildlyinaccurate/whoopsie
+$ docker run --rm --volume $PWD:/whoopsie --workdir /whoopsie \
+    wildlyinaccurate/whoopsie \
+    whoopsie gallery /whoopsie/path/to/config.yaml
 ```
 
 ### Options
