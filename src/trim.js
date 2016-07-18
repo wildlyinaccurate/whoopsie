@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const childProcess = require('child_process')
 
 module.exports = function trim (image) {

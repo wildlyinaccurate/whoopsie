@@ -1,4 +1,5 @@
 const _ = require('lodash/fp')
+const Promise = require('bluebird')
 const path = require('path')
 const childProcess = require('child_process')
 const phantomjs = require('phantomjs-prebuilt')
