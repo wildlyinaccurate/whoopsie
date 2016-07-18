@@ -1,20 +1,18 @@
 /* global phantom */
 var page = require('webpage').create()
 var args = require('system').args
-var url = args[1]
-var width = args[2]
-var options = JSON.parse(args[3])
+var options = JSON.parse(args[1])
 
 page.viewportSize = {
-  width: width,
-  height: width * 2
+  width: options.width,
+  height: options.width * 2
 }
 
 page.onError = page.onConsoleMessage = function () {
   // Prevent messages and errors from piping to stdout
 }
 
-page.open(url, function () {
+page.open(options.url, function () {
   setTimeout(function () {
     page.evaluate(function (options) {
       options.ignoreSelectors.forEach(function (selector) {

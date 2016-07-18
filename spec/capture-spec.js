@@ -1,3 +1,4 @@
+const _ = require('lodash/fp')
 const proxyquire = require('proxyquire')
 const EventEmitter = require('events')
 
@@ -20,17 +21,19 @@ describe('capture()', () => {
   })
 
   it('should pass all options to PhantomJS', () => {
+    const url = 'http://localhost/'
+    const width = 200
     const opts = {
       ignoreSelectors: ['.foo', '.bar'],
       renderWaitTime: 2000
     }
 
-    capture('http://localhost/', 200, opts)
+    const expectedArgs = _.merge(opts, { url, width })
+
+    capture(url, width, opts)
 
     expect(mockSpawn.calls.argsFor(0)[1]).toEqual(jasmine.arrayContaining([
-      'http://localhost/',
-      200,
-      JSON.stringify(opts)
+      JSON.stringify(expectedArgs)
     ]))
   })
 

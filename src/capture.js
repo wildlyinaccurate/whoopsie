@@ -1,4 +1,4 @@
-const _ = require('lodash')
+const _ = require('lodash/fp')
 const path = require('path')
 const childProcess = require('child_process')
 const phantomjs = require('phantomjs-prebuilt')
@@ -11,8 +11,11 @@ const DEFAULT_OPTIONS = {
 }
 
 module.exports = function capture (url, width, userOpts = {}) {
-  const options = _.merge(DEFAULT_OPTIONS, userOpts)
   const captureId = identifier('capture')
+  const options = _.merge(
+    _.merge(DEFAULT_OPTIONS, userOpts),
+    { url, width }
+  )
 
   return new Promise(resolve => {
     log.info(`Capturing ${url} at ${width}px`)
@@ -21,8 +24,6 @@ module.exports = function capture (url, width, userOpts = {}) {
 
     const args = [
       path.join(__dirname, 'driver/phantomjs.js'),
-      url,
-      width,
       JSON.stringify(options)
     ]
 
