@@ -1,0 +1,15 @@
+sites:
+  - http://localhost:8888/1
+  - http://localhost:8888/2
+
+widths:
+  - 240
+  - 320
+
+urls:
+  - .html
+
+renderWaitTime: 0
+galleryDir: results/
+failureThreshold: 10
+fuzz: 5
