@@ -3,6 +3,7 @@ const path = require('path')
 const childProcess = require('child_process')
 const phantomjs = require('phantomjs-prebuilt')
 const log = require('./log')
+const identifier = require('./identifier')
 
 const DEFAULT_OPTIONS = {
   ignoreSelectors: [],
@@ -11,9 +12,12 @@ const DEFAULT_OPTIONS = {
 
 module.exports = function capture (url, width, userOpts = {}) {
   const options = _.merge(DEFAULT_OPTIONS, userOpts)
+  const captureId = identifier()
 
   return new Promise(resolve => {
     log.info(`Capturing ${url} at ${width}px`)
+    log.debug(`Capture identifier is ${captureId}`)
+    log.time(captureId)
 
     const args = [
       path.join(__dirname, 'driver/phantomjs.js'),
@@ -30,6 +34,7 @@ module.exports = function capture (url, width, userOpts = {}) {
     })
 
     proc.on('close', () => {
+      log.timeEnd(captureId)
       resolve(new CaptureResult(url, width, Buffer.concat(imageData)))
     })
   })

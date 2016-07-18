@@ -8,4 +8,16 @@ log.log = function (level, args) {
   }
 }
 
+log.time = function (label) {
+  if (this.level >= Log.DEBUG) {
+    console.time(label)
+  }
+}
+
+log.timeEnd = function (label) {
+  if (this.level >= Log.DEBUG) {
+    console.timeEnd(label)
+  }
+}
+
 module.exports = log
