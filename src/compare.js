@@ -11,7 +11,7 @@ const TMP_DIR = '/tmp/whoopsie-compare-'
 
 module.exports = function compare (capture1, capture2) {
   return new Promise((resolve, reject) => {
-    const compareId = identifier()
+    const compareId = identifier('compare')
 
     log.info(`Comparing captures of ${capture1.url} and ${capture2.url} at ${capture1.width}px`)
     log.debug(`Compare identifier is ${compareId}`)

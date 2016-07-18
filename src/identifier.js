@@ -1,3 +1,3 @@
-module.exports = function identifier () {
-  return `$${Math.floor(Math.random() * 10E8)}`
+module.exports = function identifier (prefix = '') {
+  return `${prefix}$${Math.floor(Math.random() * 10E8)}`
 }

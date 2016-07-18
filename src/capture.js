@@ -12,7 +12,7 @@ const DEFAULT_OPTIONS = {
 
 module.exports = function capture (url, width, userOpts = {}) {
   const options = _.merge(DEFAULT_OPTIONS, userOpts)
-  const captureId = identifier()
+  const captureId = identifier('capture')
 
   return new Promise(resolve => {
     log.info(`Capturing ${url} at ${width}px`)
