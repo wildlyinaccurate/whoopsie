@@ -22,7 +22,7 @@ page.open(options.url, function () {
       })
     }, options)
 
-    console.log(page.renderBase64('PNG'))
+    page.render(options.renderPath)
     phantom.exit()
   }, options.renderWaitTime)
 })

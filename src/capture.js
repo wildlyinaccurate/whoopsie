@@ -5,6 +5,7 @@ const childProcess = require('child_process')
 const phantomjs = require('phantomjs-prebuilt')
 const log = require('./log')
 const identifier = require('./identifier')
+const tmpdir = require('./tmpdir')
 
 const DEFAULT_OPTIONS = {
   ignoreSelectors: [],
@@ -13,31 +14,30 @@ const DEFAULT_OPTIONS = {
 
 module.exports = function capture (url, width, userOpts = {}) {
   const captureId = identifier('capture')
-  const options = _.merge(
-    _.merge(DEFAULT_OPTIONS, userOpts),
-    { url, width }
-  )
 
-  return new Promise(resolve => {
-    log.info(`Capturing ${url} at ${width}px`)
-    log.debug(`Capture identifier is ${captureId}`)
-    log.time(captureId)
+  return tmpdir().then(dir => {
+    const renderPath = path.join(dir, `${captureId}.png`)
+    const options = _.merge(
+      _.merge(DEFAULT_OPTIONS, userOpts),
+      { url, width, renderPath }
+    )
 
-    const args = [
-      path.join(__dirname, 'driver/phantomjs.js'),
-      JSON.stringify(options)
-    ]
+    return new Promise(resolve => {
+      log.info(`Capturing ${url} at ${width}px`)
+      log.debug(`Capture identifier is ${captureId}`)
+      log.time(captureId)
 
-    const proc = childProcess.spawn(phantomjs.path, args)
-    const imageData = []
+      const args = [
+        path.join(__dirname, 'driver/phantomjs.js'),
+        JSON.stringify(options)
+      ]
 
-    proc.stdout.on('data', chunk => {
-      imageData.push(Buffer.from(chunk.toString('ascii'), 'base64'))
-    })
+      const proc = childProcess.spawn(phantomjs.path, args)
 
-    proc.on('close', () => {
-      log.timeEnd(captureId)
-      resolve(new CaptureResult(url, width, Buffer.concat(imageData)))
+      proc.on('close', () => {
+        log.timeEnd(captureId)
+        resolve(new CaptureResult(url, width, renderPath))
+      })
     })
   })
 }
