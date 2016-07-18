@@ -9,8 +9,10 @@ const config = require('./config')
 module.exports = function cli (argv) {
   const command = argv._[0]
 
-  if (argv.verbose) {
+  if (argv.debug) {
     log.level = Log.DEBUG
+  } else if (argv.verbose) {
+    log.level = Log.INFO
   }
 
   switch (command) {
@@ -58,5 +60,10 @@ Usage:
   whoopsie validate-config <path>   Validate configuration at <path>
   whoopsie version                  Show the program version
   whoopsie help                     Show this message
+
+Extra flags:
+  --verbose                         Print extra information while running
+  --debug                           Print debugging information while running (--debug implies --verbose)
+
   `)
 }
