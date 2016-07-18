@@ -5,9 +5,11 @@ const log = require('./log')
 const gallery = require('./cli/gallery')
 const test = require('./cli/test')
 const config = require('./config')
+const identifier = require('./identifier')
 
 module.exports = function cli (argv) {
   const command = argv._[0]
+  const commandIdentifier = identifier(`command$${command}`)
 
   if (argv.debug) {
     log.level = Log.DEBUG
@@ -15,10 +17,13 @@ module.exports = function cli (argv) {
     log.level = Log.INFO
   }
 
+  log.time(commandIdentifier)
+
   switch (command) {
     case 'gallery':
       config.validateFile(argv._[1])
         .then(config => gallery(config, argv))
+        .then(() => log.timeEnd(commandIdentifier))
         .catch(err => console.error(`Error: ${err.message}`))
 
       break
@@ -28,6 +33,7 @@ module.exports = function cli (argv) {
         .then(config => test(config, argv))
         .then(results => JSON.stringify(results, null, 4))
         .then(console.log)
+        .then(() => log.timeEnd(commandIdentifier))
         .catch(err => console.error(`Error: ${err.message}`))
 
       break
@@ -35,6 +41,7 @@ module.exports = function cli (argv) {
     case 'validate-config':
       config.validateFile(argv._[1])
         .then(() => console.log('Configuration is valid.'))
+        .then(() => log.timeEnd(commandIdentifier))
         .catch(err => console.error(err.message))
 
       break

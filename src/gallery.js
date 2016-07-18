@@ -3,14 +3,16 @@ const Promise = require('bluebird')
 const fs = Promise.promisifyAll(require('fs'))
 const mkdirp = Promise.promisify(require('mkdirp'))
 const path = require('path')
-const crypto = require('crypto')
 const log = require('./log')
+const identifier = require('./identifier')
 
 module.exports = function gallery (baseDir, diffs, failureThreshold) {
-  const galleryDir = path.join(baseDir, galleryName())
+  const galleryId = identifier('gallery')
+  const galleryDir = path.join(baseDir, galleryId)
   const galleryIndexPath = path.join(galleryDir, 'index.html')
 
   log.info(`Generating gallery for ${diffs.length} results`)
+  log.time(galleryId)
 
   return mkdirp(galleryDir)
     .then(() => fs.readFileAsync(templatePath(), 'utf8'))
@@ -24,7 +26,10 @@ module.exports = function gallery (baseDir, diffs, failureThreshold) {
       time: new Date()
     }))
     .then(html => fs.writeFileAsync(galleryIndexPath, html))
-    .then(log.info(`Gallery written to ${galleryIndexPath}`))
+    .then(() => {
+      log.info(`Gallery written to ${galleryIndexPath}`)
+      log.timeEnd(galleryId)
+    })
 }
 
 function templatePath () {
@@ -61,11 +66,4 @@ function saveImages (baseDir, diff, index) {
     fs.writeFileAsync(path.join(baseDir, diff.test.image.path), diff.test.image),
     fs.writeFileAsync(path.join(baseDir, diff.image.path), diff.image)
   ]).then(() => diff)
-}
-
-function galleryName () {
-  return crypto.createHash('sha1')
-    .update(new Date().toJSON())
-    .digest('hex')
-    .substr(0, 12)
 }

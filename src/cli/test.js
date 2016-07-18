@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const _ = require('lodash/fp')
 const os = require('os')
 const Queue = require('queue')

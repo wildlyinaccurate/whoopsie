@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const fs = require('fs')
 const schema = require('validate')
 const yaml = require('js-yaml')
