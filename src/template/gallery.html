@@ -15,6 +15,14 @@
             color: #403f4c;
         }
 
+        .bb {
+            border-bottom: 1px solid #d7e0e5;
+        }
+
+        .c {
+            text-align: center;
+        }
+
         .p-1 {
             padding: 1em;
         }
@@ -30,10 +38,28 @@
         .light-bg {
             background: #f6f8f9;
         }
+
+        .result {
+            padding-bottom: 1em;
+        }
+
+        .result__img--collapsed {
+            max-height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result__img--collapsed:before {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100%);
+            content: "";
+            height: 100%;
+            position: absolute;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
-    <div class="pure-g">
+    <div class="pure-g p-1">
         <div class="pure-u-1-1 p-1">
             <h1>Test Result</h1>
 
@@ -48,25 +74,49 @@
         </div>
     </div>
 
+    <div class="pure-g">
+        <div class="pure-u-1-1 c">
+            <button class="expand-all pure-button">Expand all images</button>
+        </div>
+    </div>
+
     <% results.forEach(function(result) { %>
         <div class="pure-g">
             <div class="pure-u-1-3 p-1">
                 <h3><%= result.base.url %> @ <%= result.base.width %>px</h3>
-                <img class="pure-img" src="<%= result.base.image.path %>">
+                <div class="result__img--collapsed">
+                    <img class="pure-img" src="<%= result.base.image.path %>">
+                </div>
             </div>
 
             <div class="pure-u-1-3 p-1">
                 <h3><%= result.test.url %> @ <%= result.test.width %>px</h3>
-                <img class="pure-img" src="<%= result.test.image.path %>">
+                <div class="result__img--collapsed">
+                    <img class="pure-img" src="<%= result.test.image.path %>">
+                </div>
             </div>
 
             <div class="pure-u-1-3 p-1">
                 <h3 class="<%= result.failed ? 'red' : 'green' %>">
                     <%= (result.results.percentage * 100).toFixed(2) %>% difference
                 </h3>
-                <img class="pure-img" src="<%= result.image.path %>">
+                <div class="result__img--collapsed">
+                    <img class="pure-img" src="<%= result.image.path %>">
+                </div>
+            </div>
+        </div>
+
+        <div class="pure-g bb">
+            <div class="pure-u-1-1 c p-1">
+                <button class="expand pure-button">Expand images</button>
             </div>
         </div>
     <% }); %>
+
+    <script>
+        document.body.addEventListener('click', e => {
+            console.log(e.target)
+        })
+    </script>
 </body>
 </html>
