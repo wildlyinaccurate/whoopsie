@@ -1,6 +1,6 @@
 const fs = require('fs')
 const childProcess = require('child_process')
-const trim = require('../src/trim')
+const trim = require('../lib/trim')
 
 describe('trim()', () => {
   it('should trim the whitespace from the bottom of an image', done => {

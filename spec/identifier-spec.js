@@ -1,4 +1,4 @@
-const identifier = require('../src/identifier')
+const identifier = require('../lib/identifier')
 
 describe('identifier()', () => {
   it('should prefix identifiers', () => {

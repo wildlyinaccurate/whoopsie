@@ -2,7 +2,7 @@ const proxyquire = require('proxyquire')
 const Log = require('log')
 
 const consoleSpy = jasmine.createSpyObj('console', ['time', 'timeEnd'])
-const log = proxyquire('../src/log', {
+const log = proxyquire('../lib/log', {
   'console': consoleSpy
 })
 

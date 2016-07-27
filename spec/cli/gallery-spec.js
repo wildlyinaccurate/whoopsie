@@ -14,12 +14,12 @@ const captureSpy = jasmine.createSpy('capture').and.callFake(mockCapture)
 const compareSpy = jasmine.createSpy('compare').and.callFake(mockDiff)
 const gallerySpy = jasmine.createSpy('gallery').and.returnValue(Promise.resolve(null))
 
-const test = proxyquire('../../src/cli/test', {
+const test = proxyquire('../../lib/cli/test', {
   '../capture': captureSpy,
   '../compare': compareSpy
 })
 
-const gallery = proxyquire('../../src/cli/gallery', {
+const gallery = proxyquire('../../lib/cli/gallery', {
   './test': test,
   '../gallery': gallerySpy
 })

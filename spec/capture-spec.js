@@ -6,7 +6,7 @@ const mockProc = new EventEmitter()
 mockProc.stdout = new EventEmitter()
 const mockSpawn = jasmine.createSpy('spawn').and.returnValue(mockProc)
 
-const capture = proxyquire('../src/capture', {
+const capture = proxyquire('../lib/capture', {
   child_process: {
     spawn: mockSpawn
   },

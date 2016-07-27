@@ -33,7 +33,7 @@ module.exports = function gallery (baseDir, diffs, failureThreshold) {
 }
 
 function templatePath () {
-  return path.join(__dirname, 'template/gallery.html')
+  return path.join(__dirname, '../template/gallery.html')
 }
 
 function makeSummary (diffs) {
