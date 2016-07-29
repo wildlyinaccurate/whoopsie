@@ -24,7 +24,7 @@ module.exports = function cli (argv) {
       config.validateFile(argv._[1])
         .then(config => gallery(config, argv))
         .then(() => log.timeEnd(commandIdentifier))
-        .catch(err => console.error(`Error: ${err.message}`))
+        // .catch(err => console.error(`Error: ${err.message}`))
 
       break
 

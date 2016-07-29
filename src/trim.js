@@ -1,25 +1,18 @@
 const Promise = require('bluebird')
 const childProcess = require('child_process')
 
-module.exports = function trim (image) {
+module.exports = function trim (path) {
   const cmd = 'convert'
   const args = [
-    '-',
+    path,
     '-trim',
-    '-'
+    path
   ]
 
   const proc = childProcess.spawn(cmd, args)
-  const data = []
-
-  proc.stdout.on('data', chunk => data.push(chunk))
-
-  proc.stdin.write(image)
-  proc.stdin.end()
 
   return new Promise((resolve, reject) => {
-    proc.on('close', () => resolve(Buffer.concat(data)))
-
+    proc.on('close', () => resolve(path))
     proc.stderr.on('data', err => reject(err.toString()))
   })
 }

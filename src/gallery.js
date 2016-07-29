@@ -17,7 +17,7 @@ module.exports = function gallery (baseDir, diffs, failureThreshold) {
   return mkdirp(galleryDir)
     .then(() => fs.readFileAsync(templatePath(), 'utf8'))
     .then(_.template)
-    .then(template => [template, processDiffs(galleryDir, diffs, failureThreshold)])
+    .then(template => [template, processDiffs(diffs, failureThreshold)])
     .all()
     .then(([template, results]) => template({
       results,
@@ -44,8 +44,8 @@ function makeSummary (diffs) {
   return { total, failures, passes }
 }
 
-function processDiffs (galleryDir, diffs, failureThreshold) {
-  return Promise.all(diffs.map(saveImages.bind(this, galleryDir)))
+function processDiffs (diffs, failureThreshold) {
+  return Promise.resolve(diffs)
     .then(_.map(setFailed.bind(this, failureThreshold)))
     .then(_.orderBy('results.percentage', 'desc'))
 }
@@ -54,16 +54,4 @@ function setFailed (failureThreshold, diff) {
   diff.failed = diff.results.percentage >= (failureThreshold / 100)
 
   return diff
-}
-
-function saveImages (baseDir, diff, index) {
-  diff.base.image.path = `base-${index}.png`
-  diff.test.image.path = `test-${index}.png`
-  diff.image.path = `diff-${index}.png`
-
-  return Promise.all([
-    fs.writeFileAsync(path.join(baseDir, diff.base.image.path), diff.base.image),
-    fs.writeFileAsync(path.join(baseDir, diff.test.image.path), diff.test.image),
-    fs.writeFileAsync(path.join(baseDir, diff.image.path), diff.image)
-  ]).then(() => diff)
 }
