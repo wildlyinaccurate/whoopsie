@@ -6,9 +6,11 @@ const phantomjs = require('phantomjs-prebuilt')
 const log = require('./log')
 const identifier = require('./identifier')
 
+const CLIENT_LOG_MARKER = '#LOG#'
 const DEFAULT_OPTIONS = {
   ignoreSelectors: [],
-  renderWaitTime: 1000
+  renderWaitTime: 1000,
+  logMarker: CLIENT_LOG_MARKER
 }
 
 module.exports = function capture (url, width, userOpts = {}) {
@@ -32,7 +34,14 @@ module.exports = function capture (url, width, userOpts = {}) {
     const imageData = []
 
     proc.stdout.on('data', chunk => {
-      imageData.push(Buffer.from(chunk.toString('ascii'), 'base64'))
+      const chunkString = chunk.toString('ascii')
+      const logMessage = extractLogMessage(chunkString)
+
+      if (logMessage) {
+        logDriverMessage(logMessage)
+      } else {
+        imageData.push(Buffer.from(chunkString, 'base64'))
+      }
     })
 
     proc.on('close', () => {
@@ -40,6 +49,21 @@ module.exports = function capture (url, width, userOpts = {}) {
       resolve(new CaptureResult(url, width, Buffer.concat(imageData)))
     })
   })
+}
+
+function logDriverMessage (message) {
+  log.log(message.level, [
+    '[DRIVER]',
+    JSON.stringify(_.unset('level', message))
+  ])
+}
+
+function extractLogMessage (string) {
+  const markerLength = CLIENT_LOG_MARKER.length
+
+  if (string.substr(0, markerLength) === CLIENT_LOG_MARKER) {
+    return JSON.parse(string.substr(markerLength))
+  }
 }
 
 function CaptureResult (url, width, image) {

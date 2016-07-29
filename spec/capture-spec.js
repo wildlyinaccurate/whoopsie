@@ -2,9 +2,11 @@ const _ = require('lodash/fp')
 const proxyquire = require('proxyquire')
 const EventEmitter = require('events')
 
+const noOp = _ => _
 const mockProc = new EventEmitter()
 mockProc.stdout = new EventEmitter()
 const mockSpawn = jasmine.createSpy('spawn').and.returnValue(mockProc)
+const mockLog = jasmine.createSpy('log')
 
 const capture = proxyquire('../src/capture', {
   child_process: {
@@ -12,6 +14,11 @@ const capture = proxyquire('../src/capture', {
   },
   phantomjs: {
     path: '/fake/phantomjs'
+  },
+  './log': {
+    log: mockLog,
+    debug: noOp,
+    info: noOp
   }
 })
 
@@ -25,7 +32,8 @@ describe('capture()', () => {
     const width = 200
     const opts = {
       ignoreSelectors: ['.foo', '.bar'],
-      renderWaitTime: 2000
+      renderWaitTime: 2000,
+      logMarker: '#LOG#'
     }
 
     const expectedArgs = _.merge(opts, { url, width })
@@ -50,6 +58,26 @@ describe('capture()', () => {
       expect(result.image.toString('ascii')).toEqual('Hello, world!')
       expect(result.url).toEqual('http://localhost/')
       expect(result.width).toEqual(200)
+
+      done()
+    })
+  })
+
+  it('should log errors from the client', done => {
+    const p = capture('http://localhost/', 200)
+    const log = {
+      level: 'ERROR',
+      message: 'Hello from the client!'
+    }
+
+    mockProc.stdout.emit('data', Buffer.from(`#LOG#${JSON.stringify(log)}`))
+    mockProc.emit('close')
+
+    p.then(() => {
+      const logArgs = mockLog.calls.argsFor(0)
+
+      expect(logArgs[0]).toEqual('ERROR')
+      expect(JSON.parse(logArgs[1][1])).toEqual({ message: 'Hello from the client!' })
 
       done()
     })
