@@ -8,11 +8,21 @@ page.viewportSize = {
   height: options.width * 2
 }
 
-page.onError = page.onConsoleMessage = function () {
-  // Prevent messages and errors from piping to stdout
+page.onError = function (error) {
+  log({ url: options.url, error: error }, 'ERROR')
 }
 
-page.open(options.url, function () {
+page.onConsoleMessage = function (error) {
+  log({ url: options.url, error: error })
+}
+
+page.open(options.url, function (status) {
+  log({
+    status: status,
+    title: page.title,
+    contentLength: page.content.length
+  })
+
   setTimeout(function () {
     page.evaluate(function (options) {
       options.ignoreSelectors.forEach(function (selector) {
@@ -26,3 +36,10 @@ page.open(options.url, function () {
     phantom.exit()
   }, options.renderWaitTime)
 })
+
+function log (obj, level) {
+  obj.level = level || 'DEBUG'
+  obj.url = options.url
+
+  console.log(options.logMarker + JSON.stringify(obj))
+}
