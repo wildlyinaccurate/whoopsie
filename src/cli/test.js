@@ -12,21 +12,20 @@ module.exports = function test (config, argv) {
 
   const captureOpts = pick(['ignoreSelectors', 'renderWaitTime'], config)
   const testPairs = chunk(2, testPermutations(config))
-  const diffPs = []
+  const diffs = []
 
   testPairs.forEach(pair => {
     q.push(cb => {
       capturePair(pair, captureOpts)
-        .then(captures => cb(null, captures))
+        .then(diffCaptures)
+        .then(diff => cb(null, diff))
     })
   })
 
-  q.on('success', captures => diffPs.push(diffCaptures(captures)))
+  q.on('success', res => diffs.push(res))
 
   return new Promise(resolve =>
-    q.start(() =>
-      Promise.all(diffPs).then(diffs => resolve(diffs))
-    )
+    q.start(() => resolve(diffs))
   )
 }
 
