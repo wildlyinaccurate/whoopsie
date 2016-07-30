@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const _ = require('lodash/fp')
+const { chunk, getOr, pick } = require('lodash/fp')
 const os = require('os')
 const Queue = require('queue')
 const product = require('cartesian-product')
@@ -7,11 +7,11 @@ const capture = require('../capture')
 const compare = require('../compare')
 
 module.exports = function test (config, argv) {
-  const concurrency = _.getOr(os.cpus().length, 'concurrency', argv)
+  const concurrency = getOr(os.cpus().length, 'concurrency', argv)
   const q = new Queue({ concurrency })
 
-  const captureOpts = _.pick(['ignoreSelectors', 'renderWaitTime'], config)
-  const testPairs = _.chunk(2, testPermutations(config))
+  const captureOpts = pick(['ignoreSelectors', 'renderWaitTime'], config)
+  const testPairs = chunk(2, testPermutations(config))
   const diffs = []
 
   testPairs.forEach(pair => {

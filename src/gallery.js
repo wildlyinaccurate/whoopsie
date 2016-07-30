@@ -1,4 +1,4 @@
-const _ = require('lodash/fp')
+const { filter, map, orderBy, template } = require('lodash/fp')
 const Promise = require('bluebird')
 const fs = Promise.promisifyAll(require('fs'))
 const mkdirp = Promise.promisify(require('mkdirp'))
@@ -16,10 +16,9 @@ module.exports = function gallery (baseDir, diffs, failureThreshold) {
 
   return mkdirp(galleryDir)
     .then(() => fs.readFileAsync(templatePath(), 'utf8'))
-    .then(_.template)
-    .then(template => [template, processDiffs(galleryDir, diffs, failureThreshold)])
+    .then(view => [template(view), processDiffs(galleryDir, diffs, failureThreshold)])
     .all()
-    .then(([template, results]) => template({
+    .then(([compiledTmpl, results]) => compiledTmpl({
       results,
       summary: makeSummary(results),
       failureThreshold,
@@ -38,7 +37,7 @@ function templatePath () {
 
 function makeSummary (diffs) {
   const total = diffs.length
-  const failures = _.filter('failed', diffs).length
+  const failures = filter('failed', diffs).length
   const passes = total - failures
 
   return { total, failures, passes }
@@ -46,8 +45,8 @@ function makeSummary (diffs) {
 
 function processDiffs (galleryDir, diffs, failureThreshold) {
   return Promise.all(diffs.map(saveImages.bind(this, galleryDir)))
-    .then(_.map(setFailed.bind(this, failureThreshold)))
-    .then(_.orderBy('results.percentage', 'desc'))
+    .then(map(setFailed.bind(this, failureThreshold)))
+    .then(orderBy('results.percentage', 'desc'))
 }
 
 function setFailed (failureThreshold, diff) {

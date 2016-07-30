@@ -1,4 +1,4 @@
-const _ = require('lodash/fp')
+const { merge, unset } = require('lodash/fp')
 const Promise = require('bluebird')
 const path = require('path')
 const childProcess = require('child_process')
@@ -15,8 +15,8 @@ const DEFAULT_OPTIONS = {
 
 module.exports = function capture (url, width, userOpts = {}) {
   const captureId = identifier('capture')
-  const options = _.merge(
-    _.merge(DEFAULT_OPTIONS, userOpts),
+  const options = merge(
+    merge(DEFAULT_OPTIONS, userOpts),
     { url, width }
   )
 
@@ -54,7 +54,7 @@ module.exports = function capture (url, width, userOpts = {}) {
 function logDriverMessage (message) {
   log.log(message.level, [
     '[DRIVER]',
-    JSON.stringify(_.unset('level', message))
+    JSON.stringify(unset('level', message))
   ])
 }
 
