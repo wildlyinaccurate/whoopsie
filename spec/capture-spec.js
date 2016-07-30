@@ -1,4 +1,4 @@
-const _ = require('lodash/fp')
+const { merge } = require('lodash/fp')
 const proxyquire = require('proxyquire')
 const EventEmitter = require('events')
 
@@ -36,7 +36,7 @@ describe('capture()', () => {
       logMarker: '#LOG#'
     }
 
-    const expectedArgs = _.merge(opts, { url, width })
+    const expectedArgs = merge(opts, { url, width })
 
     capture(url, width, opts)
 

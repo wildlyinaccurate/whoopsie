@@ -1,4 +1,4 @@
-const _ = require('lodash')
+const { set } = require('lodash/fp')
 const Promise = require('bluebird')
 const rimraf = Promise.promisify(require('rimraf'))
 const fs = Promise.promisifyAll(require('fs'))
@@ -21,8 +21,8 @@ module.exports = function compare (capture1, capture2) {
     const diffFile = `${dir}/diff`
 
     const trimImages = [
-      trim(capture1.image).then(data => _.set(capture1, 'image', data)),
-      trim(capture2.image).then(data => _.set(capture2, 'image', data))
+      trim(capture1.image).then(set(capture1, 'image')),
+      trim(capture2.image).then(set(capture2, 'image'))
     ]
 
     const createImageFiles = () => [
