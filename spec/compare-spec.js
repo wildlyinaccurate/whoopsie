@@ -1,5 +1,5 @@
 const proxyquire = require('proxyquire')
-const compare = proxyquire('../src/compare', {
+const compare = proxyquire('../lib/compare', {
   './trim': x => Promise.resolve(x)
 })
 

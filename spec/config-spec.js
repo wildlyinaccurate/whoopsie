@@ -1,4 +1,4 @@
-const config = require('../src/config')
+const config = require('../lib/config')
 
 const minimumValidConfig = {
   sites: ['site1', 'site2'],

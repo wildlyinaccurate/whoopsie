@@ -5,7 +5,7 @@ const proxyquire = require('proxyquire')
 
 const templateSpy = jasmine.createSpy('template').and.returnValue('MOCK HTML')
 
-const gallery = proxyquire('../src/gallery', {
+const gallery = proxyquire('../lib/gallery', {
   'lodash/fp': {
     template: () => templateSpy
   }
