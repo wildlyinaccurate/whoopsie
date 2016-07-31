@@ -64,13 +64,15 @@ Whoopsie v${pkg.version}
 
 Usage:
 
-  whoopsie gallery <path>           Run visual regression tests and generate comparison gallery using configuration at <path>
-  whoopsie test <path>              Run visual regression tests and output raw JSON results using configuration at <path>
+  whoopsie gallery <path>           Run visual regression tests and generate an HTML comparison gallery using the configuration at <path>
+  whoopsie test <path>              Run visual regression tests and output raw JSON results using the configuration at <path>
   whoopsie validate-config <path>   Validate configuration at <path>
   whoopsie version                  Show the program version
   whoopsie help                     Show this message
 
 Extra flags:
+
+  --concurrency                     Number of tests to run concurrently (default: one per CPU core)
   --debug                           Print extra debugging information while running (default: off)
   --quiet                           Only print errors while running (default: off)
 

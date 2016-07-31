@@ -13,21 +13,36 @@ $ npm install -g whoopsie
 
 > **Note:** Whoopsie requires Node.js v6.0 or higher and a recent version of ImageMagick.
 
+## Configuration
+
+See [config/sample.yaml](./config/sample.yaml) for a sample configuration file.
+
 ## Usage
+
+### Commands
+
+#### `gallery`
+
+Run visual regression tests and generate an HTML gallery containing the results.
 
 ```
 $ whoopsie gallery path/to/config.yaml
 ```
 
-## Docker
+#### `test`
 
-If you prefer to run Whoopsie in a container, you can use the official Docker image:
+Run visual regression tests and output raw JSON results.
 
 ```
-$ docker pull wildlyinaccurate/whoopsie
-$ docker run --rm --volume $PWD:/whoopsie --workdir /whoopsie \
-    wildlyinaccurate/whoopsie \
-    whoopsie gallery /whoopsie/path/to/config.yaml
+$ whoopsie test path/to/config.yaml
+```
+
+#### `validate-config`
+
+Check that the configuration file is valid.
+
+```
+$ whoopsie validate-config path/to/config.yaml
 ```
 
 ### Options
@@ -38,9 +53,16 @@ $ docker run --rm --volume $PWD:/whoopsie --workdir /whoopsie \
 | `--debug`       | `<Off>`            | Print extra debugging information while running |
 | `--quiet`       | `<Off>`            | Only print errors while running                 |
 
-## Configuration
+### Docker
 
-See [config/sample.yaml](./config/sample.yaml) for a sample configuration file.
+If you prefer to run Whoopsie in a container, you can use the official Docker image:
+
+```
+$ docker pull wildlyinaccurate/whoopsie
+$ docker run --rm --volume $PWD:/whoopsie --workdir /whoopsie \
+    wildlyinaccurate/whoopsie \
+    whoopsie gallery /whoopsie/path/to/config.yaml
+```
 
 ## Example Output
 
