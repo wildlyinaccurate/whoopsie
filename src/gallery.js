@@ -1,4 +1,4 @@
-const { filter, map, orderBy, template } = require('lodash/fp')
+const { filter, identity, map, orderBy, template } = require('lodash/fp')
 const Promise = require('bluebird')
 const fs = Promise.promisifyAll(require('fs'))
 const mkdirp = Promise.promisify(require('mkdirp'))
@@ -7,16 +7,17 @@ const log = require('./log')
 const identifier = require('./identifier')
 
 module.exports = function gallery (baseDir, diffs, failureThreshold) {
+  const validDiffs = filter(identity, diffs)
   const galleryId = identifier('gallery')
   const galleryDir = path.join(baseDir, galleryId)
   const galleryIndexPath = path.join(galleryDir, 'index.html')
 
-  log.info(`Generating gallery for ${diffs.length} results`)
+  log.info(`Generating gallery for ${validDiffs.length} results`)
   log.time(galleryId)
 
   return mkdirp(galleryDir)
     .then(() => fs.readFileAsync(templatePath(), 'utf8'))
-    .then(view => [template(view), processDiffs(galleryDir, diffs, failureThreshold)])
+    .then(view => [template(view), processDiffs(galleryDir, validDiffs, failureThreshold)])
     .all()
     .then(([compiledTmpl, results]) => compiledTmpl({
       results,

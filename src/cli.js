@@ -26,7 +26,7 @@ module.exports = function cli (argv) {
       config.validateFile(argv._[1])
         .then(config => gallery(config, argv))
         .then(() => log.timeEnd(commandIdentifier))
-        .catch(err => console.error(`Error: ${err.message}`))
+        .catch(error => console.error(`Error: ${error.message}`))
 
       break
 
@@ -36,7 +36,7 @@ module.exports = function cli (argv) {
         .then(results => JSON.stringify(results, null, 4))
         .then(console.log)
         .then(() => log.timeEnd(commandIdentifier))
-        .catch(err => console.error(`Error: ${err.message}`))
+        .catch(error => console.error(`Error: ${error.message}`))
 
       break
 
@@ -44,7 +44,7 @@ module.exports = function cli (argv) {
       config.validateFile(argv._[1])
         .then(() => console.log('Configuration is valid.'))
         .then(() => log.timeEnd(commandIdentifier))
-        .catch(err => console.error(err.message))
+        .catch(error => console.error(error.message))
 
       break
 
