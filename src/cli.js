@@ -11,10 +11,12 @@ module.exports = function cli (argv) {
   const command = argv._[0]
   const commandIdentifier = identifier(`command$${command}`)
 
+  log.level = Log.INFO
+
   if (argv.debug) {
     log.level = Log.DEBUG
-  } else if (argv.verbose) {
-    log.level = Log.INFO
+  } else if (argv.quiet) {
+    log.level = Log.ERROR
   }
 
   log.time(commandIdentifier)
@@ -69,8 +71,8 @@ Usage:
   whoopsie help                     Show this message
 
 Extra flags:
-  --verbose                         Print extra information while running
-  --debug                           Print debugging information while running (--debug implies --verbose)
+  --debug                           Print extra debugging information while running (default: off)
+  --quiet                           Only print errors while running (default: off)
 
   `)
 }

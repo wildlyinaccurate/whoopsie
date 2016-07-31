@@ -32,11 +32,11 @@ $ docker run --rm --volume $PWD:/whoopsie --workdir /whoopsie \
 
 ### Options
 
-| Name            | Default value      | Description                                   |
-|-----------------|--------------------|-----------------------------------------------|
-| `--concurrency` | `os.cpus().length` | Number of tests to run concurrently           |
-| `--verbose`     | `<Off>`            | Enable verbose output                         |
-| `--debug`       | `<Off>`            | Enable debugging output (implies `--verbose`) |
+| Name            | Default value      | Description                                     |
+|-----------------|--------------------|-------------------------------------------------|
+| `--concurrency` | `os.cpus().length` | Number of tests to run concurrently             |
+| `--debug`       | `<Off>`            | Print extra debugging information while running |
+| `--quiet`       | `<Off>`            | Only print errors while running                 |
 
 ## Configuration
 
