@@ -5,18 +5,18 @@ const EventEmitter = require('events')
 const noOp = _ => _
 const mockProc = new EventEmitter()
 mockProc.stdout = new EventEmitter()
-const mockSpawn = jasmine.createSpy('spawn').and.returnValue(mockProc)
-const mockLog = jasmine.createSpy('log')
+const spawnSpy = jasmine.createSpy('spawn').and.returnValue(mockProc)
+const logSpy = jasmine.createSpy('log')
 
 const capture = proxyquire('../src/capture', {
   child_process: {
-    spawn: mockSpawn
+    spawn: spawnSpy
   },
   phantomjs: {
     path: '/fake/phantomjs'
   },
   './log': {
-    log: mockLog,
+    log: logSpy,
     debug: noOp,
     info: noOp
   }
@@ -24,7 +24,7 @@ const capture = proxyquire('../src/capture', {
 
 describe('capture()', () => {
   beforeEach(() => {
-    mockSpawn.calls.reset()
+    spawnSpy.calls.reset()
   })
 
   it('should pass all options to PhantomJS', () => {
@@ -40,7 +40,7 @@ describe('capture()', () => {
 
     capture(url, width, opts)
 
-    expect(mockSpawn.calls.argsFor(0)[1]).toEqual(jasmine.arrayContaining([
+    expect(spawnSpy.calls.argsFor(0)[1]).toEqual(jasmine.arrayContaining([
       JSON.stringify(expectedArgs)
     ]))
   })
@@ -74,7 +74,7 @@ describe('capture()', () => {
     mockProc.emit('close')
 
     p.then(() => {
-      const logArgs = mockLog.calls.argsFor(0)
+      const logArgs = logSpy.calls.argsFor(0)
 
       expect(logArgs[0]).toEqual('ERROR')
       expect(JSON.parse(logArgs[1][1])).toEqual({ message: 'Hello from the client!' })

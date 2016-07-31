@@ -55,6 +55,10 @@ module.exports = function compare (capture1, capture2) {
 
         return rimraf(dir).then(() => diff)
       })
+      .catch(error => {
+        log.error('Unable to compare screenshots. The driver was probably unable to load one of the pages.')
+        log.debug(`${compareId} diff generation failed: ${error}`)
+      })
   })
 }
 

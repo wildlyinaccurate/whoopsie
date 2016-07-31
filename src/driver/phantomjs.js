@@ -9,15 +9,16 @@ page.viewportSize = {
 }
 
 page.onError = function (error) {
-  log({ url: options.url, error: error }, 'ERROR')
+  log({ level: 'ERROR', url: options.url, error: error })
 }
 
 page.onConsoleMessage = function (error) {
-  log({ url: options.url, error: error })
+  log({ level: 'DEBUG', url: options.url, error: error })
 }
 
 page.open(options.url, function (status) {
   log({
+    level: status === 'fail' ? 'ERROR' : 'DEBUG',
     status: status,
     title: page.title,
     contentLength: page.content.length
@@ -37,8 +38,7 @@ page.open(options.url, function (status) {
   }, options.renderWaitTime)
 })
 
-function log (obj, level) {
-  obj.level = level || 'DEBUG'
+function log (obj) {
   obj.url = options.url
 
   console.log(options.logMarker + JSON.stringify(obj))
