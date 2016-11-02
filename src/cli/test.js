@@ -1,8 +1,8 @@
 const Promise = require('bluebird')
-const { chunk, getOr, pick } = require('lodash/fp')
+const { getOr, pick } = require('lodash/fp')
 const os = require('os')
 const Queue = require('queue')
-const product = require('cartesian-product')
+const testPermutations = require('../test-permutations')
 const capture = require('../capture')
 const compare = require('../compare')
 
@@ -11,7 +11,7 @@ module.exports = function test (config, argv) {
   const q = new Queue({ concurrency })
 
   const captureOpts = pick(['ignoreSelectors', 'renderWaitTime'], config)
-  const testPairs = chunk(2, testPermutations(config))
+  const testPairs = testPermutations(config.sites.slice(0, 2), config.urls, config.widths)
   const diffs = []
 
   testPairs.forEach(pair => {
@@ -29,16 +29,8 @@ module.exports = function test (config, argv) {
   )
 }
 
-function testPermutations (config) {
-  return product([
-    config.urls,
-    config.widths,
-    config.sites.slice(0, 2)
-  ])
-}
-
 function capturePair (pair, opts) {
-  const makeCapture = ([url, width, site]) => capture(site + url, width, opts)
+  const makeCapture = ([url, width]) => capture(url, width, opts)
 
   return Promise.all(pair.map(makeCapture))
 }
