@@ -6,3 +6,5 @@ patch:
   'npm:ms:20170412':
     - image-diff > gm > debug > ms:
         patched: '2017-05-25T04:33:03.154Z'
+    - phantomjs-prebuilt > extract-zip > debug > ms:
+        patched: '2017-08-17T04:33:06.275Z'
