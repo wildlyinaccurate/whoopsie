@@ -3,24 +3,36 @@ const fs = require('fs')
 const schema = require('validate')
 const yaml = require('js-yaml')
 
-// validate :: Object -> Promise<Object>
-module.exports.validate = function validate (config) {
+const DEFAULT_CONFIG = {
+  browser: 'HeadlessChrome',
+  blockRequests: [],
+  failureThreshold: 10,
+  fuzz: 5,
+  galleryDir: 'results/',
+  headless: true,
+  ignoreSelectors: []
+}
+
+// process :: Object -> Promise<Object>
+module.exports.process = function process (config) {
+  const mergedConfig = Object.assign({}, DEFAULT_CONFIG, config)
+
   return new Promise((resolve, reject) => {
-    const errors = makeSchema().validate(config)
+    const errors = makeSchema().validate(mergedConfig)
 
     if (errors.length > 0) {
       reject(makeError(errors))
     } else {
-      resolve(config)
+      resolve(mergedConfig)
     }
   })
 }
 
-// validateFile :: String -> Promise<Object>
-module.exports.validateFile = function validateFile (path) {
+// processFile :: String -> Promise<Object>
+module.exports.processFile = function processFile (path) {
   return readConfigFile(path)
     .then(yaml.safeLoad)
-    .then(module.exports.validate)
+    .then(module.exports.process)
 }
 
 function makeSchema () {
@@ -29,48 +41,64 @@ function makeSchema () {
       type: 'array',
       required: true,
       use: x => x.length === 2,
-      message: 'Exactly 2 sites must be specified'
+      message: 'Exactly 2 "sites" values must be specified'
     },
 
-    widths: {
-      type: 'array',
-      required: true,
-      use: x => x.length > 0,
-      message: 'At least one widths value must be specified'
-    },
+    viewports: [{
+      width: {
+        type: 'number',
+        required: true,
+        message: 'A "width" value must be specified for each "viewports" object'
+      },
+      isMobile: {
+        type: 'boolean',
+        message: 'The value for "isMobile" must be a boolean'
+      }
+    }],
 
     urls: {
       type: 'array',
       required: true,
       use: x => x.length > 0,
-      message: 'At least one urls value must be specified'
+      message: 'At least one "urls" value must be specified'
+    },
+
+    browser: {
+      type: 'string',
+      required: true,
+      message: 'A value is required for "browser"'
     },
 
     galleryDir: {
       type: 'string',
       required: true,
-      message: 'A value is required for galleryDir'
+      message: 'A value is required for "galleryDir"'
     },
 
     failureThreshold: {
       type: 'number',
       required: true,
-      message: 'A value is required for failureThreshold'
+      message: 'A value is required for "failureThreshold"'
     },
 
     ignoreSelectors: {
       type: 'array',
-      message: 'The value for ignoreSelectors must be an array'
+      message: 'The value for "ignoreSelectors" must be an array'
     },
 
     renderWaitTime: {
       type: 'number',
-      message: 'The value for renderWaitTime must be a number'
+      message: 'The value for "renderWaitTime" must be a number'
     },
 
     fuzz: {
       type: 'number',
-      message: 'The value for fuzz must be a number'
+      message: 'The value for "fuzz" must be a number'
+    },
+
+    headless: {
+      type: 'boolean',
+      message: 'The value for "headless" must be a boolean'
     }
   })
 }

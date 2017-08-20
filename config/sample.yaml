@@ -1,19 +1,41 @@
 # Two URLs to run tests against. The first is considered to be the baseline
 sites:
-  - http://www.bbc.co.uk/news
-  - http://www.test.bbc.co.uk/news
+  - http://www.bbc.com/news
+  - http://www.test.bbc.com/news
 
-# Screen widths to run tests at
-widths:
-  - 320
-  - 600
-  - 1020
+# Viewport configurations to run tests with
+# Each viewport can have the following properties:
+#  - width (required)
+#  - height: (default: 1000)
+#  - isMobile (default: false)
+#  - javascriptDisabled (default: false)
+#  - name
+#
+viewports:
+  - width: 320
+    height: 480
+    isMobile: true
+
+  - width: 320
+    height: 480
+    isMobile: true
+    javascriptDisabled: true
+    name: Core Experience
 
 # List of paths to test (relative to site URLs)
 urls:
   - /
-  - /technology
-  - /technology-36387563
+
+# Which browser to run the tests with. Available browsers:
+#  - HeadlessChrome
+#
+browser: HeadlessChrome
+
+# List of requests to block.
+# Request URLs are partially matched against each value
+blockRequests:
+  - static.bbc.co.uk/bbcdotcom
+  - bbc.co.uk/wwscripts
 
 # List of CSS selectors to hide (display: none) before capturing a screenshot
 ignoreSelectors:
@@ -21,9 +43,6 @@ ignoreSelectors:
   - '#orb-header'
   - '#orb-footer'
   - '#breaking-news-container'
-
-# How long (in milliseconds) to wait before capturing a screenshot
-renderWaitTime: 3000
 
 # Directory in which to save test results
 galleryDir: results/
@@ -34,3 +53,6 @@ failureThreshold: 10
 # How much fuzz should be applied when calculating differences
 # See http://www.imagemagick.org/Usage/color_basics/#fuzz for a full explanation
 fuzz: 5
+
+# Whether to run the capture process in headless mode
+headless: false

@@ -15,9 +15,17 @@ describe('log', () => {
   it('should log only the message', () => {
     spyOn(log.stream, 'write')
 
-    log.error('野菜はおいしいです！')
+    log.critical('野菜はおいしいです！')
 
     expect(log.stream.write).toHaveBeenCalledWith('野菜はおいしいです！\n')
+  })
+
+  it('should prefix errors with "ERROR:"', () => {
+    spyOn(log.stream, 'write')
+
+    log.error('Everything broke!')
+
+    expect(log.stream.write).toHaveBeenCalledWith('ERROR: Everything broke!\n')
   })
 
   it('should not use time and timeEnd when the level is higher than DEBUG', () => {

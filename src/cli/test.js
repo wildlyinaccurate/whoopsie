@@ -1,36 +1,47 @@
 const Promise = require('bluebird')
-const { getOr, pick } = require('lodash/fp')
+const { getOr } = require('lodash/fp')
 const os = require('os')
 const Queue = require('queue')
 const testPermutations = require('../test-permutations')
 const capture = require('../capture')
 const compare = require('../compare')
+const drivers = require('../drivers')
 
-module.exports = function test (config, argv) {
+module.exports = async function test (config, argv) {
+  const driver = drivers[config.browser]
+
+  if (!driver) {
+    throw new Error(`Unsupported browser "${config.browser}"`)
+  }
+
+  const diffs = []
+  const testPairs = testPermutations(config.sites.slice(0, 2), config.urls, config.viewports)
   const concurrency = getOr(os.cpus().length, 'concurrency', argv)
   const q = new Queue({ concurrency })
 
-  const captureOpts = pick(['ignoreSelectors', 'renderWaitTime'], config)
-  const testPairs = testPermutations(config.sites.slice(0, 2), config.urls, config.widths)
-  const diffs = []
+  q.on('success', res => diffs.push(res))
+
+  await driver.initialise(config)
 
   testPairs.forEach(pair => {
     q.push(cb => {
-      capturePair(pair, captureOpts)
+      capturePair(driver, pair, config)
         .then(diffCaptures)
         .then(diff => cb(null, diff))
     })
   })
 
-  q.on('success', res => diffs.push(res))
+  return new Promise(resolve => {
+    q.start(() => {
+      driver.cleanUp()
 
-  return new Promise(resolve =>
-    q.start(() => resolve(diffs))
-  )
+      resolve(diffs)
+    })
+  })
 }
 
-function capturePair (pair, opts) {
-  const makeCapture = ([url, width]) => capture(url, width, opts)
+function capturePair (driver, pair, config) {
+  const makeCapture = ([url, viewport]) => capture(driver, url, viewport, config)
 
   return Promise.all(pair.map(makeCapture))
 }

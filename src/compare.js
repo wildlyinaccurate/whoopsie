@@ -11,7 +11,7 @@ const tmpdir = require('./tmpdir')
 module.exports = function compare (capture1, capture2) {
   const compareId = identifier('compare')
 
-  log.info(`Comparing captures of ${capture1.url} and ${capture2.url} at ${capture1.width}px`)
+  log.info(`Comparing captures of ${capture1.url} and ${capture2.url} at ${capture1.viewport.width}px`)
   log.debug(`Compare identifier is ${compareId}`)
   log.time(compareId)
 
