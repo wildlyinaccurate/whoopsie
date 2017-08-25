@@ -3,7 +3,6 @@
     "env": {
         "jasmine": true
     },
-    "installedESLint": true,
     "plugins": [
         "standard"
     ],
