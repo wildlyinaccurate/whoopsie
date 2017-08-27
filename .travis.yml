@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "6"
+  - "8"
 
 before_script:
   - phantomjs --version
@@ -9,4 +9,4 @@ before_script:
 
 script:
   - npm run test
-  - node bin/whoopsie.js gallery spec/support/test-config.yaml --debug
+  # - node bin/whoopsie.js gallery spec/support/test-config.yaml --debug

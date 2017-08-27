@@ -9,6 +9,10 @@ log.log = function (level, args) {
   }
 }
 
+log.error = function (message) {
+  log.log('ERROR', [`ERROR: ${message}`])
+}
+
 log.time = function (label) {
   if (this.level >= Log.DEBUG) {
     console.time(label)

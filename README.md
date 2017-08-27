@@ -11,7 +11,7 @@ Whoopsie is a visual regression tool for testing responsive web sites.
 $ npm install -g whoopsie
 ```
 
-> **Note:** Whoopsie requires Node.js v6.0 or higher and a recent version of ImageMagick.
+> **Note:** Whoopsie requires Node.js 8 or higher and a recent version of ImageMagick.
 
 ## Configuration
 

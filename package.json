@@ -7,8 +7,8 @@
   "scripts": {
     "test": "npm run eslint && npm run jasmine",
     "eslint": "eslint src/ spec/",
-    "jasmine": "if [ -z $TRAVIS_JOB_ID ]; then jasmine; else npm run jasmine-coveralls; fi",
-    "jasmine-coveralls": "istanbul cover jasmine && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "jasmine": "if [ -z $TRAVIS_JOB_ID ]; then nyc jasmine; else npm run jasmine-coveralls; fi",
+    "jasmine-coveralls": "nyc --reporter=lcov jasmine && cat ./coverage/lcov.info | coveralls",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect"
   },
@@ -36,7 +36,7 @@
     "log": "^1.4.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "phantomjs-prebuilt": "^2.1.15",
+    "puppeteer": "^0.10.1",
     "queue": "^4.0.0",
     "rimraf": "^2.5.2",
     "validate": "^3.0.1"
@@ -49,8 +49,9 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.0.0",
     "eslint-plugin-standard": "^3.0.1",
-    "istanbul": "^0.4.3",
+    "nyc": "^11.1.0",
     "jasmine": "^2.8.0",
+    "jasmine-spec-reporter": "^4.2.1",
     "proxyquire": "^1.7.9",
     "snyk": "^1.40.1"
   },
