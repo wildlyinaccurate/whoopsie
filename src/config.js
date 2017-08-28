@@ -63,6 +63,12 @@ function makeSchema () {
       message: 'At least one "urls" value must be specified'
     },
 
+    blockRequests: {
+      type: 'array',
+      required: true,
+      message: 'The value for "blockRequests" must be an array'
+    },
+
     browser: {
       type: 'string',
       required: true,

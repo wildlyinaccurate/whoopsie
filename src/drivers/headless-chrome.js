@@ -40,6 +40,7 @@ module.exports.capture = async function (url, viewport, config) {
     const matchesRequest = pattern => (new RegExp(pattern)).test(req.url)
 
     if (some(matchesRequest, config.blockRequests)) {
+      log.debug(`Blocking request ${req.url} on ${url}`)
       req.abort()
     } else {
       req.continue()
