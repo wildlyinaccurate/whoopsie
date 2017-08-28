@@ -24,7 +24,7 @@ module.exports.cleanUp = async function () {
   await browser.close()
 }
 
-module.exports.capture = async function (url, viewport, config) {
+module.exports.capture = async function (imagePath, url, viewport, config) {
   const width = viewport.width
   const height = viewport.height || DEFAULT_VIEWPORT_HEIGHT
   const page = await browser.newPage()
@@ -56,6 +56,7 @@ module.exports.capture = async function (url, viewport, config) {
   }
 
   const image = await page.screenshot({
+    path: imagePath,
     fullPage: true
   })
 

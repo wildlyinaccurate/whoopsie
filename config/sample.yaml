@@ -55,4 +55,4 @@ failureThreshold: 10
 fuzz: 5
 
 # Whether to run the capture process in headless mode
-headless: false
+headless: true
