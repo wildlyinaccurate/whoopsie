@@ -3,10 +3,6 @@ const puppeteer = require('puppeteer')
 const log = require('../log')
 
 const DEFAULT_VIEWPORT_HEIGHT = 1000
-const PAGE_LOAD_OPTIONS = {
-  waitUntil: 'networkidle',
-  networkIdleTimeout: 5000
-}
 
 let browser = null
 
@@ -25,6 +21,10 @@ module.exports.cleanUp = async function () {
 }
 
 module.exports.capture = async function (imagePath, url, viewport, config) {
+  const PAGE_LOAD_OPTIONS = {
+    waitUntil: 'networkidle',
+    networkIdleTimeout: config.networkIdleTimeout
+  }
   const width = viewport.width
   const height = viewport.height || DEFAULT_VIEWPORT_HEIGHT
   const page = await browser.newPage()
@@ -36,6 +36,7 @@ module.exports.capture = async function (imagePath, url, viewport, config) {
     await page.setJavaScriptEnabled(false)
   }
 
+  // Request interceptor to block requests that match the "blockRequests" config
   page.on('request', req => {
     const matchesRequest = pattern => new RegExp(pattern).test(req.url)
 
@@ -57,18 +58,25 @@ module.exports.capture = async function (imagePath, url, viewport, config) {
     await page.reload(PAGE_LOAD_OPTIONS)
   }
 
+  // Set all "ignoredSelectors" elements to display: none
   await page.evaluate(selectors => {
-    [...document.querySelectorAll(selectors)].forEach(element => {
+    document.querySelectorAll(selectors).forEach(element => {
       element.style.display = 'none'
     })
   }, config.ignoreSelectors)
 
-  const image = await page.screenshot({
+  // Scroll to the bottom of the page to trigger any lazy-loading
+  await page.evaluate(() => {
+    window.scrollTo(0, document.body.clientHeight)
+  })
+
+  // Wait for any navigation triggered by lazy-loading to finish
+  await page.waitForNavigation(PAGE_LOAD_OPTIONS)
+
+  await page.screenshot({
     path: imagePath,
     fullPage: true
   })
 
   await page.close()
-
-  return image
 }

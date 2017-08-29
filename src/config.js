@@ -7,6 +7,7 @@ const DEFAULT_CONFIG = {
   browser: 'HeadlessChrome',
   blockRequests: [],
   failureThreshold: 10,
+  networkIdleTimeout: 4000,
   fuzz: 5,
   galleryDir: 'results/',
   headless: true,
@@ -88,6 +89,12 @@ function makeSchema () {
       type: 'number',
       required: true,
       message: 'A value is required for "failureThreshold"'
+    },
+
+    networkIdleTimeout: {
+      type: 'number',
+      required: true,
+      message: 'A value is required for "networkIdleTimeout"'
     },
 
     ignoreSelectors: {

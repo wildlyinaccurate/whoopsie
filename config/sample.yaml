@@ -50,6 +50,9 @@ galleryDir: results/
 # How different two pages should be (as a percentage) for a test to fail
 failureThreshold: 10
 
+# How many milliseconds the network should be idle for before capturing the page
+networkIdleTimeout: 4000
+
 # How much fuzz should be applied when calculating differences
 # See http://www.imagemagick.org/Usage/color_basics/#fuzz for a full explanation
 fuzz: 5
