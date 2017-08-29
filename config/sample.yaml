@@ -1,7 +1,7 @@
 # Two URLs to run tests against. The first is considered to be the baseline
 sites:
-  - http://www.bbc.com/news
-  - http://www.test.bbc.com/news
+  - http://www.bbc.com
+  - http://www.test.bbc.com
 
 # Viewport configurations to run tests with
 # Each viewport can have the following properties:
@@ -23,8 +23,8 @@ viewports:
     name: Core Experience
 
 # List of paths to test (relative to site URLs)
-urls:
-  - /
+paths:
+  - /news
 
 # Which browser to run the tests with. Available browsers:
 #  - HeadlessChrome

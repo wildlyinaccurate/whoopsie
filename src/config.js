@@ -59,11 +59,11 @@ function makeSchema () {
       }
     ],
 
-    urls: {
+    paths: {
       type: 'array',
       required: true,
       use: x => x.length > 0,
-      message: 'At least one "urls" value must be specified'
+      message: 'At least one "paths" value must be specified'
     },
 
     blockRequests: {

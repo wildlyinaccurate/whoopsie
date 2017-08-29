@@ -17,7 +17,7 @@ module.exports = async function test (config, argv) {
   const results = []
   const testPairs = testPermutations(
     config.sites.slice(0, 2),
-    config.urls,
+    config.paths,
     config.viewports
   )
   const concurrency = getOr(os.cpus().length, 'concurrency', argv)

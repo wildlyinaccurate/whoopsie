@@ -3,14 +3,14 @@ const { chunk, merge } = require('lodash/fp')
 const product = require('cartesian-product')
 
 // Generate a list of pairs which contain (url, viewport) tuples representing all
-// permutations of the sites, urls, and viewports provided.
+// permutations of the sites, paths, and viewports provided.
 //
 // The permutations will be ordered such that each pair contains the same url
 // and viewport for each site.
-module.exports = function testPermutations (sites, urls, viewports) {
+module.exports = function testPermutations (sites, paths, viewports) {
   const pairs = chunk(2)
 
-  return pairs(product([urls, viewports, sites]).map(makeTuple))
+  return pairs(product([paths, viewports, sites]).map(makeTuple))
 }
 
 function makeTuple ([path, viewport, site]) {

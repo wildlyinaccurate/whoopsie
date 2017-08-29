@@ -6,7 +6,7 @@ viewports:
   - width: 240
   - width: 320
 
-urls:
+paths:
   - .html
 
 renderWaitTime: 0
