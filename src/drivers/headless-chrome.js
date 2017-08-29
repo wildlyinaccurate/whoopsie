@@ -57,6 +57,12 @@ module.exports.capture = async function (imagePath, url, viewport, config) {
     await page.reload(PAGE_LOAD_OPTIONS)
   }
 
+  await page.evaluate(selectors => {
+    [...document.querySelectorAll(selectors)].forEach(element => {
+      element.style.display = 'none'
+    })
+  }, config.ignoreSelectors)
+
   const image = await page.screenshot({
     path: imagePath,
     fullPage: true
