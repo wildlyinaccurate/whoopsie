@@ -4,10 +4,20 @@ const diff = Promise.promisify(require('image-diff').getFullResult)
 const log = require('./log')
 const identifier = require('./identifier')
 
-module.exports = function compare (baseCapture, testCapture) {
+// compareCaptures :: [CaptureResult] -> [CaptureResult] -> [CompareResult]
+module.exports = function compareCaptures (baseCaptures, testCaptures) {
+  return Promise.all(
+    baseCaptures.map((base, index) => compare(base, testCaptures[index]))
+  )
+}
+
+// compare :: CaptureResult -> CaptureResult -> CompareResult
+function compare (baseCapture, testCapture) {
   const compareId = identifier('compare')
 
-  log.info(`Comparing captures of ${baseCapture.url} and ${testCapture.url}`)
+  log.info(
+    `Comparing captures of ${baseCapture.page.url} and ${testCapture.page.url}`
+  )
   log.debug(`Compare identifier is ${compareId}`)
   log.time(compareId)
 
@@ -27,7 +37,7 @@ module.exports = function compare (baseCapture, testCapture) {
       results.id = compareId
       results.imagePath = diffImagePath
 
-      return new Diff(results, baseCapture, testCapture)
+      return new CompareResult(results, baseCapture, testCapture)
     })
     .catch(error => {
       log.error(
@@ -37,7 +47,7 @@ module.exports = function compare (baseCapture, testCapture) {
     })
 }
 
-function Diff (diff, baseCapture, testCapture) {
+function CompareResult (diff, baseCapture, testCapture) {
   this.base = baseCapture
   this.test = testCapture
   this.diff = diff

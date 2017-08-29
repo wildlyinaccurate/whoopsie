@@ -73,49 +73,81 @@ Outputs test results as JSON.
     "results": [
         {
             "base": {
-                "id": "capture$af47bcbd",
-                "url": "http://www.bbc.com/news/",
-                "imagePath": "/tmp/whoopsie-capture$af47bcbd.png"
+                "type": "selector",
+                "selector": ".nw-c-top-stories",
+                "id": "capture$ad367858",
+                "page": {
+                    "path": "/news",
+                    "selectors": [
+                        ".nw-c-top-stories",
+                        ".nw-c-must-see"
+                    ],
+                    "url": "http://www.bbc.com/news"
+                },
+                "imagePath": "/tmp/whoopsie-capture$ad367858-0.png"
             },
             "test": {
-                "id": "capture$50380d46",
-                "url": "http://www.test.bbc.com/news/",
-                "imagePath": "/tmp/whoopsie-capture$50380d46.png"
+                "type": "selector",
+                "selector": ".nw-c-top-stories",
+                "id": "capture$c1dbebb0",
+                "page": {
+                    "path": "/news",
+                    "selectors": [
+                        ".nw-c-top-stories",
+                        ".nw-c-must-see"
+                    ],
+                    "url": "http://www.test.bbc.com/news"
+                },
+                "imagePath": "/tmp/whoopsie-capture$c1dbebb0-0.png"
             },
             "diff": {
                 "total": 0,
                 "percentage": 0,
-                "id": "compare$48c4c849",
-                "imagePath": "/tmp/whoopsie-compare$48c4c849.png"
+                "id": "compare$520b7196",
+                "imagePath": "/tmp/whoopsie-compare$520b7196.png"
             },
             "viewport": {
-                "width": 320,
-                "height": 480,
-                "isMobile": true,
-                "javascriptDisabled": true,
-                "name": "Core Experience"
+                "width": 640,
+                "isMobile": true
             }
         },
         {
             "base": {
-                "id": "capture$a82dce5a",
-                "url": "http://www.bbc.com/news/",
-                "imagePath": "/tmp/whoopsie-capture$a82dce5a.png"
+                "type": "selector",
+                "selector": ".nw-c-must-see",
+                "id": "capture$ad367858",
+                "page": {
+                    "path": "/news",
+                    "selectors": [
+                        ".nw-c-top-stories",
+                        ".nw-c-must-see"
+                    ],
+                    "url": "http://www.bbc.com/news"
+                },
+                "imagePath": "/tmp/whoopsie-capture$ad367858-1.png"
             },
             "test": {
-                "id": "capture$a0854fc8",
-                "url": "http://www.test.bbc.com/news/",
-                "imagePath": "/tmp/whoopsie-capture$a0854fc8.png"
+                "type": "selector",
+                "selector": ".nw-c-must-see",
+                "id": "capture$c1dbebb0",
+                "page": {
+                    "path": "/news",
+                    "selectors": [
+                        ".nw-c-top-stories",
+                        ".nw-c-must-see"
+                    ],
+                    "url": "http://www.test.bbc.com/news"
+                },
+                "imagePath": "/tmp/whoopsie-capture$c1dbebb0-1.png"
             },
             "diff": {
-                "total": 4750.12,
-                "percentage": 0.0724822,
-                "id": "compare$33624d4c",
-                "imagePath": "/tmp/whoopsie-compare$33624d4c.png"
+                "total": 0,
+                "percentage": 0,
+                "id": "compare$2a2e5a47",
+                "imagePath": "/tmp/whoopsie-compare$2a2e5a47.png"
             },
             "viewport": {
-                "width": 320,
-                "height": 480,
+                "width": 640,
                 "isMobile": true
             }
         }

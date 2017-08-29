@@ -2,11 +2,18 @@ const { some } = require('lodash/fp')
 const puppeteer = require('puppeteer')
 const log = require('../log')
 
+module.exports = {
+  initialise,
+  cleanUp,
+  capturePage,
+  captureSelectors
+}
+
 const DEFAULT_VIEWPORT_HEIGHT = 1000
 
 let browser = null
 
-module.exports.initialise = async function (config) {
+async function initialise (config) {
   browser = await puppeteer.launch({
     headless: config.headless
   })
@@ -16,11 +23,46 @@ module.exports.initialise = async function (config) {
   log.debug(`Browser version is ${version}`)
 }
 
-module.exports.cleanUp = async function () {
+async function cleanUp () {
   await browser.close()
 }
 
-module.exports.capture = async function (imagePath, url, viewport, config) {
+async function capturePage (imagePath, url, viewport, config) {
+  const page = await loadPage(url, viewport, config)
+
+  await page.screenshot({
+    path: imagePath,
+    fullPage: true
+  })
+
+  await page.close()
+}
+
+async function captureSelectors (selectors, url, viewport, config) {
+  const page = await loadPage(url, viewport, config)
+
+  const capturePromises = selectors.map(async function (selector) {
+    const boundingClientRect = await page.evaluate(selector => {
+      const element = document.querySelector(selector)
+      const rect = element.getBoundingClientRect()
+
+      return JSON.stringify(
+        Object.assign(rect, {
+          y: rect.y + window.pageYOffset
+        })
+      )
+    }, selector.selector)
+
+    return page.screenshot({
+      clip: JSON.parse(boundingClientRect),
+      path: selector.imagePath
+    })
+  })
+
+  return Promise.all(capturePromises).then(() => page.close())
+}
+
+async function loadPage (url, viewport, config) {
   const PAGE_LOAD_OPTIONS = {
     waitUntil: 'networkidle',
     networkIdleTimeout: config.networkIdleTimeout
@@ -71,12 +113,12 @@ module.exports.capture = async function (imagePath, url, viewport, config) {
   })
 
   // Wait for any navigation triggered by lazy-loading to finish
-  await page.waitForNavigation(PAGE_LOAD_OPTIONS)
+  try {
+    await page.waitForNavigation(PAGE_LOAD_OPTIONS)
+  } catch (error) {
+    log.error(`Headless Chrome timed out while loading ${url} at ${width}px`)
+    log.debug(error)
+  }
 
-  await page.screenshot({
-    path: imagePath,
-    fullPage: true
-  })
-
-  await page.close()
+  return page
 }

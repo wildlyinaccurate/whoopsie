@@ -60,11 +60,11 @@ function makeSchema () {
       }
     ],
 
-    paths: {
+    pages: {
       type: 'array',
       required: true,
       use: x => x.length > 0,
-      message: 'At least one "paths" value must be specified'
+      message: 'At least one "pages" value must be specified'
     },
 
     blockRequests: {

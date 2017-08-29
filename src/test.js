@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const { filter, getOr, set } = require('lodash/fp')
+const { filter, getOr, map, set } = require('lodash/fp')
 const os = require('os')
 const Queue = require('queue')
 const testPermutations = require('./test-permutations')
@@ -17,13 +17,13 @@ module.exports = async function test (config, argv) {
   const results = []
   const testPairs = testPermutations(
     config.sites.slice(0, 2),
-    config.paths,
+    config.pages,
     config.viewports
   )
   const concurrency = getOr(os.cpus().length, 'concurrency', argv)
   const q = new Queue({ concurrency })
 
-  q.on('success', result => results.push(result))
+  q.on('success', result => results.push(...result))
 
   await driver.initialise(config)
 
@@ -34,7 +34,7 @@ module.exports = async function test (config, argv) {
     q.push(cb => {
       capturePair(driver, pair, config)
         .then(diffCaptures)
-        .then(set('viewport', viewport))
+        .then(map(set('viewport', viewport)))
         .then(result => cb(null, result))
     })
   })
@@ -49,8 +49,8 @@ module.exports = async function test (config, argv) {
 }
 
 function capturePair (driver, pair, config) {
-  const makeCapture = ([url, viewport]) =>
-    capture(driver, url, viewport, config)
+  const makeCapture = ([page, viewport]) =>
+    capture(driver, page, viewport, config)
 
   return Promise.all(pair.map(makeCapture))
 }
