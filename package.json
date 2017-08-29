@@ -8,8 +8,8 @@
     "test": "npm run prettier && npm run eslint && npm run jasmine",
     "prettier": "prettier-eslint --write --no-semi --single-quote \"src/**/*.js\" \"spec/**/*.js\"",
     "eslint": "eslint src/ spec/",
-    "jasmine": "if [ -z $TRAVIS_JOB_ID ]; then nyc jasmine; else npm run jasmine-coveralls; fi",
-    "jasmine-coveralls": "nyc --reporter=lcov jasmine && cat ./coverage/lcov.info | coveralls",
+    "jasmine": "if [ -z $TRAVIS_JOB_ID ]; then nyc --all --exclude \"spec/**\" jasmine; else npm run jasmine-coveralls; fi",
+    "jasmine-coveralls": "nyc --all --exclude \"spec/**\" --reporter=lcov jasmine && cat ./coverage/lcov.info | coveralls",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect"
   },
