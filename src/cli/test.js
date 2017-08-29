@@ -15,7 +15,11 @@ module.exports = async function test (config, argv) {
   }
 
   const diffs = []
-  const testPairs = testPermutations(config.sites.slice(0, 2), config.urls, config.viewports)
+  const testPairs = testPermutations(
+    config.sites.slice(0, 2),
+    config.urls,
+    config.viewports
+  )
   const concurrency = getOr(os.cpus().length, 'concurrency', argv)
   const q = new Queue({ concurrency })
 
@@ -41,7 +45,8 @@ module.exports = async function test (config, argv) {
 }
 
 function capturePair (driver, pair, config) {
-  const makeCapture = ([url, viewport]) => capture(driver, url, viewport, config)
+  const makeCapture = ([url, viewport]) =>
+    capture(driver, url, viewport, config)
 
   return Promise.all(pair.map(makeCapture))
 }

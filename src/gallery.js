@@ -17,14 +17,19 @@ module.exports = function gallery (baseDir, results, failureThreshold) {
 
   return mkdirp(galleryDir)
     .then(() => fs.readFile(templatePath(), 'utf8'))
-    .then(view => [template(view), processResults(galleryDir, validResults, failureThreshold)])
+    .then(view => [
+      template(view),
+      processResults(galleryDir, validResults, failureThreshold)
+    ])
     .all()
-    .then(([compiledTmpl, processedResults]) => compiledTmpl({
-      results: processedResults,
-      summary: makeSummary(processedResults),
-      failureThreshold,
-      time: new Date()
-    }))
+    .then(([compiledTmpl, processedResults]) =>
+      compiledTmpl({
+        results: processedResults,
+        summary: makeSummary(processedResults),
+        failureThreshold,
+        time: new Date()
+      })
+    )
     .then(html => fs.writeFile(galleryIndexPath, html))
     .then(() => {
       log.info(`Gallery written to ${galleryIndexPath}`)
@@ -75,7 +80,7 @@ function copyImages (galleryDir, result) {
 }
 
 function setFailed (failureThreshold, result) {
-  result.failed = result.diff.percentage >= (failureThreshold / 100)
+  result.failed = result.diff.percentage >= failureThreshold / 100
 
   return result
 }

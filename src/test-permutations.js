@@ -10,9 +10,7 @@ const product = require('cartesian-product')
 module.exports = function testPermutations (sites, urls, viewports) {
   const pairs = chunk(2)
 
-  return pairs(
-    product([urls, viewports, sites]).map(makeTuple)
-  )
+  return pairs(product([urls, viewports, sites]).map(makeTuple))
 }
 
 function makeTuple ([path, viewport, site]) {

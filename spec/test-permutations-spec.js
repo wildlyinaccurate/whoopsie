@@ -18,8 +18,14 @@ describe('testPermutations()', () => {
     const widths = [100, 200]
 
     expect(testPermutations(sites, urls, widths)).toEqual([
-      [['http://site:8080/test-page?env=test&other-param=true', 100], ['http://site/test-page?env=live&other-param=true', 100]],
-      [['http://site:8080/test-page?env=test&other-param=true', 200], ['http://site/test-page?env=live&other-param=true', 200]]
+      [
+        ['http://site:8080/test-page?env=test&other-param=true', 100],
+        ['http://site/test-page?env=live&other-param=true', 100]
+      ],
+      [
+        ['http://site:8080/test-page?env=test&other-param=true', 200],
+        ['http://site/test-page?env=live&other-param=true', 200]
+      ]
     ])
   })
 })

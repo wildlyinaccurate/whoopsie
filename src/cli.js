@@ -23,7 +23,8 @@ module.exports = function cli (argv) {
 
   switch (command) {
     case 'gallery':
-      config.processFile(argv._[1])
+      config
+        .processFile(argv._[1])
         .then(config => gallery(config, argv))
         .then(() => log.timeEnd(commandIdentifier))
         .catch(error => {
@@ -34,7 +35,8 @@ module.exports = function cli (argv) {
       break
 
     case 'test':
-      config.processFile(argv._[1])
+      config
+        .processFile(argv._[1])
         .then(config => test(config, argv))
         .then(results => JSON.stringify(results, null, 4))
         .then(console.log)
@@ -47,7 +49,8 @@ module.exports = function cli (argv) {
       break
 
     case 'validate-config':
-      config.processFile(argv._[1])
+      config
+        .processFile(argv._[1])
         .then(() => console.log('Configuration is valid.'))
         .then(() => log.timeEnd(commandIdentifier))
         .catch(error => {

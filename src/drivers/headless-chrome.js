@@ -37,7 +37,7 @@ module.exports.capture = async function (imagePath, url, viewport, config) {
   }
 
   page.on('request', req => {
-    const matchesRequest = pattern => (new RegExp(pattern)).test(req.url)
+    const matchesRequest = pattern => new RegExp(pattern).test(req.url)
 
     if (some(matchesRequest, config.blockRequests)) {
       log.debug(`Blocking request ${req.url} on ${url}`)
@@ -50,7 +50,9 @@ module.exports.capture = async function (imagePath, url, viewport, config) {
   try {
     await page.goto(url, PAGE_LOAD_OPTIONS)
   } catch (e) {
-    log.error(`Failed to load ${url} at ${width}px. Reloading page to try again.`)
+    log.error(
+      `Failed to load ${url} at ${width}px. Reloading page to try again.`
+    )
 
     await page.reload(PAGE_LOAD_OPTIONS)
   }

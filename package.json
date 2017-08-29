@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "bin": "./bin/whoopsie.js",
   "scripts": {
-    "test": "npm run eslint && npm run jasmine",
+    "test": "npm run prettier && npm run eslint && npm run jasmine",
+    "prettier": "prettier-eslint --write --no-semi --single-quote \"src/**/*.js\" \"spec/**/*.js\"",
     "eslint": "eslint src/ spec/",
     "jasmine": "if [ -z $TRAVIS_JOB_ID ]; then nyc jasmine; else npm run jasmine-coveralls; fi",
     "jasmine-coveralls": "nyc --reporter=lcov jasmine && cat ./coverage/lcov.info | coveralls",
@@ -47,11 +48,12 @@
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.1.1",
-    "eslint-plugin-promise": "^3.0.0",
+    "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "nyc": "^11.1.0",
     "jasmine": "^2.8.0",
     "jasmine-spec-reporter": "^4.2.1",
+    "prettier-eslint-cli": "^4.2.1",
     "proxyquire": "^1.7.9",
     "snyk": "^1.40.1"
   },

@@ -5,7 +5,8 @@ module.exports = function identifier (prefix = '') {
 }
 
 function hash () {
-  return crypto.createHash('sha1')
+  return crypto
+    .createHash('sha1')
     .update(Math.random().toString())
     .digest('hex')
 }

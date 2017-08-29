@@ -7,7 +7,10 @@ const identifier = require('./identifier')
 module.exports = function compare (baseCapture, testCapture) {
   const compareId = identifier('compare')
 
-  log.info(`Comparing captures of ${baseCapture.url} and ${testCapture.url} at ${baseCapture.viewport.width}px`)
+  log.info(
+    `Comparing captures of ${baseCapture.url} and ${testCapture.url} at ${baseCapture
+      .viewport.width}px`
+  )
   log.debug(`Compare identifier is ${compareId}`)
   log.time(compareId)
 
@@ -27,14 +30,12 @@ module.exports = function compare (baseCapture, testCapture) {
       results.id = compareId
       results.imagePath = diffImagePath
 
-      return new Diff(
-        results,
-        baseCapture,
-        testCapture
-      )
+      return new Diff(results, baseCapture, testCapture)
     })
     .catch(error => {
-      log.error('Unable to compare screenshots. The driver was probably unable to load one of the pages.')
+      log.error(
+        'Unable to compare screenshots. The driver was probably unable to load one of the pages.'
+      )
       log.debug(`${compareId} diff generation failed: ${error}`)
     })
 }

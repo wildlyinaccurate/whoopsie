@@ -2,10 +2,7 @@ const config = require('../src/config')
 
 const minimumValidConfig = {
   sites: ['site1', 'site2'],
-  viewports: [
-    { width: 200 },
-    { width: 300 }
-  ],
+  viewports: [{ width: 200 }, { width: 300 }],
   urls: ['/']
 }
 
@@ -25,11 +22,10 @@ describe('config.processFile()', () => {
 
 describe('config.process()', () => {
   it('should accept a minimum valid config', done => {
-    config.process(minimumValidConfig)
-      .then(actualConfig => {
-        expect(actualConfig).toEqual(jasmine.objectContaining(minimumValidConfig))
-        done()
-      })
+    config.process(minimumValidConfig).then(actualConfig => {
+      expect(actualConfig).toEqual(jasmine.objectContaining(minimumValidConfig))
+      done()
+    })
   })
 
   it('should reject config with no sites', done => {
@@ -41,7 +37,9 @@ describe('config.process()', () => {
   })
 
   it('should reject config with more than two sites', done => {
-    config.process(modifyConfig({ sites: ['site1', 'site2', 'site3'] })).catch(done)
+    config
+      .process(modifyConfig({ sites: ['site1', 'site2', 'site3'] }))
+      .catch(done)
   })
 
   it('should reject config with no viewports', done => {
@@ -53,10 +51,14 @@ describe('config.process()', () => {
   })
 
   it('should accept a config with optional values', done => {
-    config.process(modifyConfig({
-      headless: true,
-      fuzz: 5
-    })).then(done)
+    config
+      .process(
+        modifyConfig({
+          headless: true,
+          fuzz: 5
+        })
+      )
+      .then(done)
   })
 })
 

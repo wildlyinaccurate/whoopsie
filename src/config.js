@@ -44,17 +44,20 @@ function makeSchema () {
       message: 'Exactly 2 "sites" values must be specified'
     },
 
-    viewports: [{
-      width: {
-        type: 'number',
-        required: true,
-        message: 'A "width" value must be specified for each "viewports" object'
-      },
-      isMobile: {
-        type: 'boolean',
-        message: 'The value for "isMobile" must be a boolean'
+    viewports: [
+      {
+        width: {
+          type: 'number',
+          required: true,
+          message:
+            'A "width" value must be specified for each "viewports" object'
+        },
+        isMobile: {
+          type: 'boolean',
+          message: 'The value for "isMobile" must be a boolean'
+        }
       }
-    }],
+    ],
 
     urls: {
       type: 'array',
@@ -113,7 +116,9 @@ function readConfigFile (path = '') {
   return new Promise((resolve, reject) => {
     fs.readFile(path, (err, contents) => {
       if (err) {
-        reject(new Error('Configuration file does not exist or is not readable.'))
+        reject(
+          new Error('Configuration file does not exist or is not readable.')
+        )
       } else {
         resolve(contents)
       }
