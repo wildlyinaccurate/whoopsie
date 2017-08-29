@@ -1,11 +1,11 @@
 const Promise = require('bluebird')
-const { getOr } = require('lodash/fp')
+const { filter, getOr, set } = require('lodash/fp')
 const os = require('os')
 const Queue = require('queue')
-const testPermutations = require('../test-permutations')
-const capture = require('../capture')
-const compare = require('../compare')
-const drivers = require('../drivers')
+const testPermutations = require('./test-permutations')
+const capture = require('./capture')
+const compare = require('./compare')
+const drivers = require('./drivers')
 
 module.exports = async function test (config, argv) {
   const driver = drivers[config.browser]
@@ -14,7 +14,7 @@ module.exports = async function test (config, argv) {
     throw new Error(`Unsupported browser "${config.browser}"`)
   }
 
-  const diffs = []
+  const results = []
   const testPairs = testPermutations(
     config.sites.slice(0, 2),
     config.urls,
@@ -23,15 +23,19 @@ module.exports = async function test (config, argv) {
   const concurrency = getOr(os.cpus().length, 'concurrency', argv)
   const q = new Queue({ concurrency })
 
-  q.on('success', res => diffs.push(res))
+  q.on('success', result => results.push(result))
 
   await driver.initialise(config)
 
   testPairs.forEach(pair => {
+    // Viewport is the same for both tuples
+    const viewport = pair[0][1]
+
     q.push(cb => {
       capturePair(driver, pair, config)
         .then(diffCaptures)
-        .then(diff => cb(null, diff))
+        .then(set('viewport', viewport))
+        .then(result => cb(null, result))
     })
   })
 
@@ -39,7 +43,7 @@ module.exports = async function test (config, argv) {
     q.start(() => {
       driver.cleanUp()
 
-      resolve(diffs)
+      resolve(new TestResult(results))
     })
   })
 }
@@ -53,4 +57,17 @@ function capturePair (driver, pair, config) {
 
 function diffCaptures ([base, test]) {
   return compare(base, test)
+}
+
+function TestResult (results) {
+  this.summary = makeSummary(results)
+  this.results = results
+}
+
+function makeSummary (results) {
+  const total = results.length
+  const failures = filter('failed', results).length
+  const passes = total - failures
+
+  return { total, failures, passes }
 }

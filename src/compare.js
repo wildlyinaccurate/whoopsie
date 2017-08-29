@@ -7,10 +7,7 @@ const identifier = require('./identifier')
 module.exports = function compare (baseCapture, testCapture) {
   const compareId = identifier('compare')
 
-  log.info(
-    `Comparing captures of ${baseCapture.url} and ${testCapture.url} at ${baseCapture
-      .viewport.width}px`
-  )
+  log.info(`Comparing captures of ${baseCapture.url} and ${testCapture.url}`)
   log.debug(`Compare identifier is ${compareId}`)
   log.time(compareId)
 
@@ -41,7 +38,7 @@ module.exports = function compare (baseCapture, testCapture) {
 }
 
 function Diff (diff, baseCapture, testCapture) {
-  this.diff = diff
   this.base = baseCapture
   this.test = testCapture
+  this.diff = diff
 }

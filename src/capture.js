@@ -17,12 +17,11 @@ module.exports = async function capture (driver, url, viewport, config) {
 
   log.timeEnd(captureId)
 
-  return new CaptureResult(captureId, url, viewport, imagePath)
+  return new CaptureResult(captureId, url, imagePath)
 }
 
-function CaptureResult (id, url, viewport, imagePath) {
+function CaptureResult (id, url, imagePath) {
   this.id = id
   this.url = url
-  this.viewport = viewport
   this.imagePath = imagePath
 }
