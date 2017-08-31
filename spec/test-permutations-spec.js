@@ -3,28 +3,34 @@ const testPermutations = require('../src/test-permutations')
 describe('testPermutations()', () => {
   it('should generate (url, width) tuples', () => {
     const sites = ['http://site-1', 'http://site-2']
-    const paths = ['/test-page']
+    const pages = [{ path: '/test-page' }]
     const widths = [100, 200]
 
-    expect(testPermutations(sites, paths, widths)).toEqual([
-      [['http://site-1/test-page', 100], ['http://site-2/test-page', 100]],
-      [['http://site-1/test-page', 200], ['http://site-2/test-page', 200]]
+    expect(testPermutations(sites, pages, widths)).toEqual([
+      [
+        [{ path: '/test-page', url: 'http://site-1/test-page' }, 100],
+        [{ path: '/test-page', url: 'http://site-2/test-page' }, 100]
+      ],
+      [
+        [{ path: '/test-page', url: 'http://site-1/test-page' }, 200],
+        [{ path: '/test-page', url: 'http://site-2/test-page' }, 200]
+      ]
     ])
   })
 
-  it('should allow query parameters and ports in both sites and paths', () => {
-    const sites = ['http://site:8080?env=test', 'http://site?env=live']
-    const paths = ['/test-page?other-param=true']
+  it('should allow query parameters and ports in both sites and pages', () => {
+    const sites = ['http://site?env=test', 'http://site?env=live']
+    const pages = [{ path: '/☃️?p=1' }]
     const widths = [100, 200]
 
-    expect(testPermutations(sites, paths, widths)).toEqual([
+    expect(testPermutations(sites, pages, widths)).toEqual([
       [
-        ['http://site:8080/test-page?env=test&other-param=true', 100],
-        ['http://site/test-page?env=live&other-param=true', 100]
+        [{ path: '/☃️?p=1', url: 'http://site/☃️?env=test&p=1' }, 100],
+        [{ path: '/☃️?p=1', url: 'http://site/☃️?env=live&p=1' }, 100]
       ],
       [
-        ['http://site:8080/test-page?env=test&other-param=true', 200],
-        ['http://site/test-page?env=live&other-param=true', 200]
+        [{ path: '/☃️?p=1', url: 'http://site/☃️?env=test&p=1' }, 200],
+        [{ path: '/☃️?p=1', url: 'http://site/☃️?env=live&p=1' }, 200]
       ]
     ])
   })

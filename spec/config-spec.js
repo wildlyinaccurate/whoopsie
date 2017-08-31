@@ -3,7 +3,7 @@ const config = require('../src/config')
 const minimumValidConfig = {
   sites: ['site1', 'site2'],
   viewports: [{ width: 200 }, { width: 300 }],
-  paths: ['/']
+  pages: [{ path: '/' }]
 }
 
 describe('config.processFile()', () => {
@@ -46,8 +46,8 @@ describe('config.process()', () => {
     config.process(modifyConfig({ viewports: [] })).catch(done)
   })
 
-  it('should reject config with no paths', done => {
-    config.process(modifyConfig({ paths: [] })).catch(done)
+  it('should reject config with no pages', done => {
+    config.process(modifyConfig({ pages: [] })).catch(done)
   })
 
   it('should accept a config with optional values', done => {

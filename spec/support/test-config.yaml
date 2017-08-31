@@ -2,12 +2,12 @@ sites:
   - http://localhost:8888/1
   - http://localhost:8888/2
 
+pages:
+  - path: .html
+
 viewports:
   - width: 240
   - width: 320
-
-paths:
-  - .html
 
 renderWaitTime: 0
 galleryDir: results/

@@ -3,6 +3,21 @@ sites:
   - http://www.bbc.com
   - http://www.test.bbc.com
 
+# List of pages to test on each site
+pages:
+  # Each page must have a path (relative to the site URLs).
+  # By default, the whole page will be captured.
+  - path: /news
+
+  # Pages can also have a list of selectors. Rather than capturing the whole
+  # page, an image of each selector will be captured.
+  - path: /news
+    selectors:
+      - .nw-c-top-stories
+      - .nw-c-must-see
+      - .nw-c-full-story
+      - .nw-c-most-read
+
 # Viewport configurations to run tests with
 # Each viewport can have the following properties:
 #  - width (required)
@@ -10,10 +25,8 @@ sites:
 #  - isMobile (default: false)
 #  - javascriptDisabled (default: false)
 #  - name
-#
 viewports:
-  - width: 320
-    height: 480
+  - width: 640
     isMobile: true
 
   - width: 320
@@ -22,13 +35,8 @@ viewports:
     javascriptDisabled: true
     name: Core Experience
 
-# List of paths to test (relative to site URLs)
-paths:
-  - /news
-
 # Which browser to run the tests with. Available browsers:
 #  - HeadlessChrome
-#
 browser: HeadlessChrome
 
 # List of requests to block.
@@ -42,10 +50,8 @@ ignoreSelectors:
   - '#blq-global'
   - '#orb-header'
   - '#orb-footer'
+  - '.nw-c-breaking-news-banner'
   - '#breaking-news-container'
-
-# Directory in which to save test results
-galleryDir: results/
 
 # How different two pages should be (as a percentage) for a test to fail
 failureThreshold: 10

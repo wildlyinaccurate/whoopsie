@@ -1,14 +1,14 @@
 sites:
   - http://www.bbc.co.uk/news
 
+pages:
+  - path: /
+  - path: /technology
+  - path: /technology-36387563
+
 widths:
   - 320
   - 600
-
-paths:
-  - /
-  - /technology
-  - /technology-36387563
 
 ignoreSelectors:
 
