@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const pkg = require('../package.json')
 const log = require('./log')
 
@@ -43,7 +44,7 @@ function runCommand (command, argv) {
       return processFile(argv._[1])
         .then(config => [config, test(config, argv)])
         .all()
-        .then(([config, output]) => reportOutput(output, config, reporters))
+        .spread((config, output) => reportOutput(output, config, reporters))
 
     case 'validate-config':
       return processFile(argv._[1]).then(() =>
@@ -81,18 +82,19 @@ Whoopsie v${pkg.version}
 
 Usage:
 
-  whoopsie test <path>              Run visual regression tests and output raw JSON results using the configuration at <path>
-  whoopsie gallery <path>           Run visual regression tests and generate an HTML comparison gallery using the configuration at <path>
-  whoopsie validate-config <path>   Validate configuration at <path>
-  whoopsie version                  Show the program version
-  whoopsie help                     Show this message
+  whoopsie test <configPath>              Run visual regression tests and output raw JSON results using the configuration at <configPath>
+  whoopsie gallery <configPath>           Run visual regression tests and generate an HTML comparison gallery using the configuration at <configPath>
+  whoopsie validate-config <configPath>   Validate configuration at <configPath>
+  whoopsie generate-gallery <configPath>  Generate a gallery from JSON using the configuration at <configPath>
+  whoopsie version                        Show the program version
+  whoopsie help                           Show this message
 
 Extra flags:
 
-  --concurrency                     Number of tests to run concurrently (default: one per CPU core)
-  --verbose                         Print test information while running (default: off)
-  --debug                           Print extra debugging information while running (default: off)
-  --quiet                           Only print errors and reporter output while running (default: off)
+  --concurrency      Number of tests to run concurrently (default: one per CPU core)
+  --verbose          Print test information while running (default: off)
+  --debug            Print extra debugging information while running (default: off)
+  --quiet            Only print errors and reporter output while running (default: off)
 
   `)
 }

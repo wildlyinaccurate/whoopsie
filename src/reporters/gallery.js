@@ -1,5 +1,5 @@
-const { map, orderBy, set, template } = require('lodash/fp')
 const Promise = require('bluebird')
+const { map, orderBy, set, template } = require('lodash/fp')
 const fs = require('fs-extra')
 const mkdirp = Promise.promisify(require('mkdirp'))
 const path = require('path')
@@ -21,7 +21,7 @@ module.exports = function galleryReporter (output, config) {
       processOutput(galleryDir, output, config.failureThreshold)
     ])
     .all()
-    .then(([compiledTmpl, processedOutput]) =>
+    .spread((compiledTmpl, processedOutput) =>
       compiledTmpl(
         Object.assign(
           {

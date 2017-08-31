@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const { filter, getOr, map, set } = require('lodash/fp')
+const { compose, filter, getOr, map, set } = require('lodash/fp')
 const os = require('os')
 const Queue = require('queue')
 const testPermutations = require('./test-permutations')
@@ -35,7 +35,8 @@ module.exports = async function test (config, argv) {
       capturePair(driver, pair, config)
         .then(diffCaptures)
         .then(map(set('viewport', viewport)))
-        .then(result => cb(null, result))
+        .then(map(setPassedAndFailed(config.failureThreshold)))
+        .then(results => cb(null, results))
     })
   })
 
@@ -57,6 +58,13 @@ function capturePair (driver, pair, config) {
 
 function diffCaptures ([base, test]) {
   return compare(base, test)
+}
+
+function setPassedAndFailed (failureThreshold) {
+  return result => compose(
+    set('failed', result.diff.percentage >= failureThreshold / 100),
+    set('passed', result.diff.percentage < failureThreshold / 100)
+  )(result)
 }
 
 function TestResult (results) {
