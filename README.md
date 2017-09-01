@@ -112,44 +112,10 @@ Outputs test results as JSON.
             }
         },
         {
-            "base": {
-                "type": "selector",
-                "selector": ".nw-c-must-see",
-                "id": "capture$ad367858",
-                "page": {
-                    "path": "/news",
-                    "selectors": [
-                        ".nw-c-top-stories",
-                        ".nw-c-must-see"
-                    ],
-                    "url": "http://www.bbc.com/news"
-                },
-                "imagePath": "/tmp/whoopsie-capture$ad367858-1.png"
-            },
-            "test": {
-                "type": "selector",
-                "selector": ".nw-c-must-see",
-                "id": "capture$c1dbebb0",
-                "page": {
-                    "path": "/news",
-                    "selectors": [
-                        ".nw-c-top-stories",
-                        ".nw-c-must-see"
-                    ],
-                    "url": "http://www.test.bbc.com/news"
-                },
-                "imagePath": "/tmp/whoopsie-capture$c1dbebb0-1.png"
-            },
-            "diff": {
-                "total": 0,
-                "percentage": 0,
-                "id": "compare$2a2e5a47",
-                "imagePath": "/tmp/whoopsie-compare$2a2e5a47.png"
-            },
-            "viewport": {
-                "width": 640,
-                "isMobile": true
-            }
+            "base": { /* ... */ },
+            "test": { /* ... */ },
+            "diff": { /* ... */ },
+            "viewport": { /* ... */ }
         }
     ]
 }
