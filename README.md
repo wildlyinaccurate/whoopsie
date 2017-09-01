@@ -118,10 +118,10 @@ Outputs test results as JSON.
             }
         },
         {
-            "base": { /* ... */ },
-            "test": { /* ... */ },
-            "diff": { /* ... */ },
-            "viewport": { /* ... */ }
+            "base": { ... },
+            "test": { ... },
+            "diff": { ... },
+            "viewport": { ... }
         }
     ]
 }
