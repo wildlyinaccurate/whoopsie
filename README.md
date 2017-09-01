@@ -57,9 +57,15 @@ $ whoopsie validate-config path/to/config.yaml
 
 ## Reporters
 
-Reporters can be specified when running `whoopsie test` by passing the `--reporter` flag. More than one reporter can be specified.
+Reporters can be specified when running `whoopsie test` by passing the `--reporter` flag. More than one reporter can be specified. The default reporter is `json`.
 
-### `json` (default)
+### `gallery`
+
+Outputs test results as an HTML gallery.
+
+[![](./example-output.png)](./example-output.png)
+
+### `json`
 
 Outputs test results as JSON.
 
@@ -120,12 +126,6 @@ Outputs test results as JSON.
     ]
 }
 ```
-
-### `gallery`
-
-Outputs test results as an HTML gallery.
-
-[![](./example-output.png)](./example-output.png)
 
 ## Docker
 
