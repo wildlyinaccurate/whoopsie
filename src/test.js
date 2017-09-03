@@ -33,6 +33,7 @@ module.exports = async function test (config, argv) {
 
     q.push(cb => {
       capturePair(driver, pair, config)
+        .tap(console.log)
         .then(diffCaptures)
         .then(map(set('viewport', viewport)))
         .then(map(setPassedAndFailed(config.failureThreshold)))
@@ -61,10 +62,11 @@ function diffCaptures ([base, test]) {
 }
 
 function setPassedAndFailed (failureThreshold) {
-  return result => compose(
-    set('failed', result.diff.percentage >= failureThreshold / 100),
-    set('passed', result.diff.percentage < failureThreshold / 100)
-  )(result)
+  return result =>
+    compose(
+      set('failed', result.diff.percentage >= failureThreshold / 100),
+      set('passed', result.diff.percentage < failureThreshold / 100)
+    )(result)
 }
 
 function TestResult (results) {

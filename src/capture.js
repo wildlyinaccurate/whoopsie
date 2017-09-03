@@ -20,7 +20,7 @@ module.exports = async function capture (driver, page, viewport, config) {
 
 async function doCapture (driver, captureId, page, viewport, config) {
   if (page.selectors) {
-    const results = page.selectors.map(
+    const selectorObjs = page.selectors.map(
       (selector, index) =>
         new SelectorCaptureResult(
           selector,
@@ -30,9 +30,24 @@ async function doCapture (driver, captureId, page, viewport, config) {
         )
     )
 
-    await driver.captureSelectors(results, page.url, viewport, config)
+    const captureResults = await driver.captureSelectors(
+      selectorObjs,
+      page.url,
+      viewport,
+      config
+    )
 
-    return results
+    return captureResults.map((result, index) => {
+      if (result.error) {
+        // A (hopefully) short-term hack to avoid a big refactor.
+        // Always return the original SelectorCaptureResult, but just set the
+        // "error" property if the capture failed and let downstream units
+        // handle it
+        return Object.assign(selectorObjs[index], { error: result.error })
+      }
+
+      return result
+    })
   } else {
     const imagePath = makeImagePath(captureId)
     await driver.capturePage(imagePath, page.url, viewport, config)

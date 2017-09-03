@@ -1,5 +1,6 @@
 const { some } = require('lodash/fp')
 const puppeteer = require('puppeteer')
+const DriverError = require('./driver-error')
 const log = require('../log')
 
 module.exports = {
@@ -44,22 +45,36 @@ async function captureSelectors (selectors, url, viewport, config) {
   const capturePromises = selectors.map(async function (selector) {
     const boundingClientRect = await page.evaluate(selector => {
       const element = document.querySelector(selector)
+
+      if (!element) return false
+
       const rect = element.getBoundingClientRect()
 
-      return JSON.stringify(
-        Object.assign(rect, {
-          y: rect.y + window.pageYOffset
-        })
-      )
+      return JSON.stringify({
+        x: rect.x,
+        y: rect.y + window.pageYOffset,
+        width: rect.width,
+        height: rect.height
+      })
     }, selector.selector)
 
-    return page.screenshot({
+    if (!boundingClientRect) {
+      return new DriverError(`Element doesn't exist`)
+    }
+
+    await page.screenshot({
       clip: JSON.parse(boundingClientRect),
       path: selector.imagePath
     })
+
+    return selector
   })
 
-  return Promise.all(capturePromises).then(() => page.close())
+  return Promise.all(capturePromises).then(results => {
+    page.close()
+
+    return results
+  })
 }
 
 async function loadPage (url, viewport, config) {
