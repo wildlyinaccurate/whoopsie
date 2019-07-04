@@ -40,7 +40,8 @@
     "mkdirp": "^0.5.1",
     "puppeteer": "^0.10.1",
     "queue": "^4.0.0",
-    "validate": "^3.0.1"
+    "validate": "^3.0.1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.9",
@@ -54,8 +55,7 @@
     "jasmine": "^2.8.0",
     "jasmine-spec-reporter": "^4.2.1",
     "prettier-eslint-cli": "^4.2.1",
-    "proxyquire": "^1.7.9",
-    "snyk": "^1.40.1"
+    "proxyquire": "^1.7.9"
   },
   "snyk": true
 }
