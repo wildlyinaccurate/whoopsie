@@ -37,7 +37,7 @@
     "lodash": "^4.13.1",
     "log": "^1.4.0",
     "minimist": "^1.2.0",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^1.0.0",
     "puppeteer": "^0.10.1",
     "queue": "^4.0.0",
     "validate": "^3.0.1",
