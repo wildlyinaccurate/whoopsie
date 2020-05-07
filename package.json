@@ -41,7 +41,7 @@
     "puppeteer": "^0.10.1",
     "queue": "^4.0.0",
     "validate": "^3.0.1",
-    "snyk": "^1.234.0"
+    "snyk": "^1.319.1"
   },
   "devDependencies": {
     "coveralls": "^2.11.9",
