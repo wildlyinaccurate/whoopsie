@@ -1,4 +1,4 @@
 module.exports = {
-  json: require('./json'),
-  gallery: require('./gallery')
-}
+  json: require("./json"),
+  gallery: require("./gallery"),
+};

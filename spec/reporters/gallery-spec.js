@@ -1,65 +1,65 @@
 /* eslint handle-callback-err: "off" */
-const proxyquire = require('proxyquire')
+const proxyquire = require("proxyquire");
 
-const templateSpy = jasmine.createSpy('template').and.returnValue('MOCK HTML')
+const templateSpy = jasmine.createSpy("template").and.returnValue("MOCK HTML");
 
-const galleryReporter = proxyquire('../../src/reporters/gallery', {
-  'fs-extra': jasmine.createSpyObj('fs', ['readFile', 'writeFile', 'copy']),
-  'lodash/fp': {
-    template: () => templateSpy
-  }
-})
+const galleryReporter = proxyquire("../../src/reporters/gallery", {
+  "fs-extra": jasmine.createSpyObj("fs", ["readFile", "writeFile", "copy"]),
+  "lodash/fp": {
+    template: () => templateSpy,
+  },
+});
 
-const mockDiff = percentage => {
+const mockDiff = (percentage) => {
   return {
     diff: {
       percentage,
-      imagePath: '/tmp/diff.png'
+      imagePath: "/tmp/diff.png",
     },
-    base: { imagePath: '/tmp/base.png' },
-    test: { imagePath: '/tmp/test.png' }
-  }
-}
+    base: { imagePath: "/tmp/base.png" },
+    test: { imagePath: "/tmp/test.png" },
+  };
+};
 
 const mockConfig = {
-  galleryDir: '/tmp/whoopsie-test',
-  failureThreshold: 10
-}
+  galleryDir: "/tmp/whoopsie-test",
+  failureThreshold: 10,
+};
 
-describe('galleryReporter()', () => {
+describe("galleryReporter()", () => {
   beforeEach(() => {
-    templateSpy.calls.reset()
-  })
+    templateSpy.calls.reset();
+  });
 
-  it('should order results by highest difference', done => {
-    const diff1 = mockDiff(0.08)
-    const diff2 = mockDiff(0.1)
+  it("should order results by highest difference", (done) => {
+    const diff1 = mockDiff(0.08);
+    const diff2 = mockDiff(0.1);
     const mockOutput = {
-      results: [diff1, diff2]
-    }
+      results: [diff1, diff2],
+    };
 
     galleryReporter(mockOutput, mockConfig).then(() => {
-      const results = templateSpy.calls.argsFor(0)[0].results
+      const results = templateSpy.calls.argsFor(0)[0].results;
 
-      expect(results[0].diff.percentage).toEqual(0.1)
-      expect(results[1].diff.percentage).toEqual(0.08)
+      expect(results[0].diff.percentage).toEqual(0.1);
+      expect(results[1].diff.percentage).toEqual(0.08);
 
-      done()
-    })
-  })
+      done();
+    });
+  });
 
-  it('should correctly identify failures based on the threshold', done => {
+  it("should correctly identify failures based on the threshold", (done) => {
     const mockOutput = {
-      results: [mockDiff(0.08), mockDiff(0.1)]
-    }
+      results: [mockDiff(0.08), mockDiff(0.1)],
+    };
 
     galleryReporter(mockOutput, mockConfig).then(() => {
-      const results = templateSpy.calls.argsFor(0)[0].results
+      const results = templateSpy.calls.argsFor(0)[0].results;
 
-      expect(results[0].failed).toBe(true)
-      expect(results[1].failed).toBe(false)
+      expect(results[0].failed).toBe(true);
+      expect(results[1].failed).toBe(false);
 
-      done()
-    })
-  })
-})
+      done();
+    });
+  });
+});
