@@ -1,82 +1,84 @@
-const Promise = require('bluebird')
-const pkg = require('../package.json')
-const log = require('./log')
+const pkg = require("../package.json");
+const log = require("./log");
 
-const test = require('./test')
-const { processFile } = require('./config')
-const identifier = require('./identifier')
-const reporters = require('./reporters')
+const test = require("./test");
+const { processFile } = require("./config");
+const identifier = require("./identifier");
+const reporters = require("./reporters");
 
-const DEFAULT_REPORTERS = ['json']
+const DEFAULT_REPORTERS = ["json"];
 
-module.exports = function cli (argv) {
+module.exports = function cli(argv) {
   if (argv.verbose) {
-    log.level = log.INFO
+    log.level = log.INFO;
   } else if (argv.debug) {
-    log.level = log.DEBUG
+    log.level = log.DEBUG;
   } else if (argv.quiet) {
-    log.level = log.ERROR
+    log.level = log.ERROR;
   }
 
-  const command = argv._[0]
-  const commandIdentifier = identifier(`command$${command}`)
+  const command = argv._[0];
+  const commandIdentifier = identifier(`command$${command}`);
 
-  log.debug(`Command identifier is ${commandIdentifier}`)
+  log.debug(`Command identifier is ${commandIdentifier}`);
 
-  log.time(commandIdentifier)
+  log.time(commandIdentifier);
 
   runCommand(command, argv)
-    .then(() => log.timeEnd(commandIdentifier))
-    .catch(error => {
-      log.error(error.message)
-      log.debug(error)
-      process.exit(1)
+    .then(() => {
+      log.timeEnd(commandIdentifier);
+      process.exit(0);
     })
-}
+    .catch((error) => {
+      log.error(error.message);
+      log.debug(error);
+      process.exit(1);
+    });
+};
 
-function runCommand (command, argv) {
+function runCommand(command, argv) {
+  const reporters = command === "gallery" ? ["gallery"] : getReporters(argv.reporter);
+
   switch (command) {
-    case 'gallery':
-    case 'test':
-      const reporters =
-        command === 'gallery' ? ['gallery'] : getReporters(argv.reporter)
-
+    case "gallery":
+    case "test":
       return processFile(argv._[1])
-        .then(config => [config, test(config, argv)])
-        .all()
-        .spread((config, output) => reportOutput(output, config, reporters))
+        .then((config) => Promise.all([config, test(config, argv)]))
+        .then(([config, output]) => reportOutput(output, config, reporters));
 
-    case 'validate-config':
-      return processFile(argv._[1]).then(() =>
-        console.log('Configuration is valid.')
-      )
+    case "validate-config":
+      return processFile(argv._[1]).then(() => console.log("Configuration is valid."));
 
-    case 'version':
-      return Promise.resolve(console.log(pkg.version))
+    case "version":
+      return Promise.resolve(console.log(pkg.version));
 
-    case 'help':
+    case "help":
     default:
-      return Promise.resolve(usage())
+      return Promise.resolve(usage());
   }
 }
 
-function getReporters (reporterNames = DEFAULT_REPORTERS) {
-  return [].concat(reporterNames)
+function getReporters(reporterNames = DEFAULT_REPORTERS) {
+  return [].concat(reporterNames);
 }
 
-function reportOutput (output, config, useReporters) {
-  useReporters.forEach(reporterName => {
-    const reporter = reporters[reporterName]
+function reportOutput(output, config, useReporters) {
+  const reporterPromises = [];
+
+  useReporters.forEach((reporterName) => {
+    const reporter = reporters[reporterName];
 
     if (reporter) {
-      reporter(output, config)
+      reporterPromises.push(reporter(output, config));
     } else {
-      log.warning(`Reporter "${reporterName}" does not exist`)
+      log.warning(`Reporter "${reporterName}" does not exist`);
     }
-  })
+  });
+
+  return Promise.all(reporterPromises);
 }
 
-function usage () {
+function usage() {
   console.log(`
 Whoopsie v${pkg.version}
 
@@ -96,5 +98,5 @@ Extra flags:
   --debug            Print extra debugging information while running (default: off)
   --quiet            Only print errors and reporter output while running (default: off)
 
-  `)
+  `);
 }
