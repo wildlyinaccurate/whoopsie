@@ -1,3 +1,3 @@
 module.exports = {
-  HeadlessChrome: require('./headless-chrome')
-}
+  HeadlessChrome: require("./headless-chrome"),
+};

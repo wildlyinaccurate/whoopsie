@@ -1,124 +1,132 @@
-const { some } = require('lodash/fp')
-const puppeteer = require('puppeteer')
-const log = require('../log')
+const { some } = require("lodash/fp");
+const puppeteer = require("puppeteer");
+const log = require("../log");
 
 module.exports = {
   initialise,
   cleanUp,
   capturePage,
-  captureSelectors
-}
+  captureSelectors,
+};
 
-const DEFAULT_VIEWPORT_HEIGHT = 1000
+const DEFAULT_VIEWPORT_HEIGHT = 1000;
 
-let browser = null
+let browser = null;
 
-async function initialise (config) {
+async function initialise(config) {
   browser = await puppeteer.launch({
-    headless: config.headless
-  })
+    headless: config.headless ? "new" : false,
+  });
 
-  const version = await browser.version()
+  const version = await browser.version();
 
-  log.debug(`Browser version is ${version}`)
+  log.debug(`Browser version is ${version}`);
 }
 
-async function cleanUp () {
-  await browser.close()
+async function cleanUp() {
+  await browser.close();
 }
 
-async function capturePage (imagePath, url, viewport, config) {
-  const page = await loadPage(url, viewport, config)
+async function capturePage(imagePath, url, viewport, config) {
+  const page = await loadPage(url, viewport, config);
 
   await page.screenshot({
     path: imagePath,
-    fullPage: true
-  })
+    fullPage: true,
+  });
 
-  await page.close()
+  await page.close();
 }
 
-async function captureSelectors (selectors, url, viewport, config) {
-  const page = await loadPage(url, viewport, config)
+async function captureSelectors(selectors, url, viewport, config) {
+  const page = await loadPage(url, viewport, config);
 
   const capturePromises = selectors.map(async function (selector) {
-    const boundingClientRect = await page.evaluate(selector => {
-      const element = document.querySelector(selector)
-      const rect = element.getBoundingClientRect()
+    const boundingClientRect = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      const rect = element.getBoundingClientRect();
 
       return JSON.stringify(
         Object.assign(rect, {
-          y: rect.y + window.pageYOffset
+          y: rect.y + window.pageYOffset,
         })
-      )
-    }, selector.selector)
+      );
+    }, selector.selector);
 
     return page.screenshot({
       clip: JSON.parse(boundingClientRect),
-      path: selector.imagePath
-    })
-  })
+      path: selector.imagePath,
+    });
+  });
 
-  return Promise.all(capturePromises).then(() => page.close())
+  return Promise.all(capturePromises).then(() => page.close());
 }
 
-async function loadPage (url, viewport, config) {
-  const PAGE_LOAD_OPTIONS = {
-    waitUntil: 'networkidle',
-    networkIdleTimeout: config.networkIdleTimeout
-  }
-  const width = viewport.width
-  const height = viewport.height || DEFAULT_VIEWPORT_HEIGHT
-  const page = await browser.newPage()
+async function loadPage(url, viewport, config) {
+  const width = viewport.width;
+  const height = viewport.height || DEFAULT_VIEWPORT_HEIGHT;
 
-  await page.setRequestInterceptionEnabled(true)
-  await page.setViewport({ width, height })
+  log.debug("Setting up page");
+  const page = await browser.newPage();
+  await page.setRequestInterception(true);
+  await page.setViewport({ width, height });
 
   if (viewport.javascriptDisabled) {
-    await page.setJavaScriptEnabled(false)
+    await page.setJavaScriptEnabled(false);
   }
 
   // Request interceptor to block requests that match the "blockRequests" config
-  page.on('request', req => {
-    const matchesRequest = pattern => new RegExp(pattern).test(req.url)
+  page.on("request", (req) => {
+    const matchesRequest = (pattern) => new RegExp(pattern).test(req.url);
 
     if (some(matchesRequest, config.blockRequests)) {
-      log.debug(`Blocking request ${req.url} on ${url}`)
-      req.abort()
+      log.debug(`Blocking request ${req.url} on ${url}`);
+      req.abort();
     } else {
-      req.continue()
+      req.continue();
     }
-  })
+  });
 
   try {
-    await page.goto(url, PAGE_LOAD_OPTIONS)
+    log.debug(`Loading URL ${url}`);
+    await page.goto(url);
   } catch (e) {
-    log.error(
-      `Failed to load ${url} at ${width}px. Reloading page to try again.`
-    )
+    log.error(`Failed to load ${url} at ${width}px. Reloading page to try again.`);
 
-    await page.reload(PAGE_LOAD_OPTIONS)
+    await page.reload();
   }
+
+  log.debug(`Waiting for network idle (${config.networkIdleTimeout} ms)`);
+  await page.waitForNetworkIdle({
+    idleTime: config.networkIdleTimeout,
+  });
 
   // Set all "ignoredSelectors" elements to display: none
-  await page.evaluate(selectors => {
-    document.querySelectorAll(selectors).forEach(element => {
-      element.style.display = 'none'
-    })
-  }, config.ignoreSelectors)
+  log.debug(`Hiding ignored selectors: ${JSON.stringify(config.ignoreSelectors)}`);
+  await page.evaluate((selectors) => {
+    selectors.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((element) => {
+        element.style.display = "none";
+      });
+    });
+  }, config.ignoreSelectors);
 
   // Scroll to the bottom of the page to trigger any lazy-loading
+  log.debug("Scrolling to page end");
   await page.evaluate(() => {
-    window.scrollTo(0, document.body.clientHeight)
-  })
+    window.scrollTo(0, document.body.clientHeight);
+  });
 
   // Wait for any navigation triggered by lazy-loading to finish
+  log.debug(`Waiting for network idle in case of lazy-loaded content (${config.networkIdleTimeout} ms)`);
   try {
-    await page.waitForNavigation(PAGE_LOAD_OPTIONS)
+    await page.waitForNetworkIdle({
+      idleTime: config.networkIdleTimeout,
+    });
   } catch (error) {
-    log.error(`Headless Chrome timed out while loading ${url} at ${width}px`)
-    log.debug(error)
+    log.error(`Headless Chrome timed out while loading ${url} at ${width}px`);
+    log.debug(error);
   }
 
-  return page
+  return page;
 }
