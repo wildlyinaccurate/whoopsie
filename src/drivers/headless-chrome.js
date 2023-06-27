@@ -97,9 +97,15 @@ async function loadPage(url, viewport, config) {
   }
 
   log.debug(`Waiting for network idle (${config.networkIdleTimeout} ms)`);
-  await page.waitForNetworkIdle({
-    idleTime: config.networkIdleTimeout,
-  });
+  try {
+    await page.waitForNetworkIdle({
+      idleTime: config.networkIdleTimeout,
+      timeout: Math.max(config.networkIdleTimeout, 30000),
+    });
+  } catch (error) {
+    log.error("Timed out while waiting for network idle");
+    log.debug(error);
+  }
 
   // Set all "ignoredSelectors" elements to display: none
   if (config.ignoreSelectors && config.ignoreSelectors.length) {
@@ -125,9 +131,10 @@ async function loadPage(url, viewport, config) {
     try {
       await page.waitForNetworkIdle({
         idleTime: config.networkIdleTimeout,
+        timeout: Math.max(config.networkIdleTimeout, 30000),
       });
     } catch (error) {
-      log.error(`Headless Chrome timed out while loading ${url} at ${width}px`);
+      log.error("Timed out while waiting for network idle");
       log.debug(error);
     }
   }

@@ -15,7 +15,7 @@ module.exports = async function test(config, argv) {
 
   const results = [];
   const testPairs = testPermutations(config.sites.slice(0, 2), config.pages, config.viewports);
-  const concurrency = getOr(os.cpus().length, "concurrency", argv);
+  const concurrency = Math.ceil(getOr(os.cpus().length, "concurrency", argv) / 2);
   const q = new Queue({ concurrency });
 
   q.on("success", (result) => results.push(...result));
