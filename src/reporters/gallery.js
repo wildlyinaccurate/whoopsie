@@ -6,7 +6,8 @@ const log = require("../log");
 const identifier = require("../identifier");
 
 module.exports = function galleryReporter(output, config) {
-  const galleryId = identifier("gallery");
+  const date = new Date().toISOString().split("T")[0];
+  const galleryId = identifier(`gallery-${date}`);
   const galleryDir = path.resolve(path.join(config.galleryDir, galleryId));
   const galleryIndexPath = path.join(galleryDir, "index.html");
 
