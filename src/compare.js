@@ -29,7 +29,6 @@ async function compare(baseCapture, testCapture) {
   const maxWidth = Math.max(baseImage.width, testImage.width);
   const maxHeight = Math.max(baseImage.height, testImage.height);
 
-  console.log("before resize", baseImage.data.byteLength, testImage.data.byteLength);
   if (baseImage.width !== testImage.width) {
     log.error("Captured images are not the same width. Cannot proceed.");
   }
@@ -43,7 +42,6 @@ async function compare(baseCapture, testCapture) {
     log.debug(`Growing test image height from ${testImage.height}px to ${maxHeight}px`);
     testImage = { ...testImage, height: maxHeight, data: growImageHeight(testImage, maxHeight) };
   }
-  console.log("after resize", baseImage.data.byteLength, testImage.data.byteLength);
 
   const diffImage = new PNG({ width: maxWidth, height: maxHeight });
   const diffPixels = pixelmatch(baseImage.data, testImage.data, diffImage.data, maxWidth, maxHeight);
