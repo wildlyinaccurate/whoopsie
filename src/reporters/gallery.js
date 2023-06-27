@@ -7,7 +7,7 @@ const identifier = require("../identifier");
 
 module.exports = function galleryReporter(output, config) {
   const galleryId = identifier("gallery");
-  const galleryDir = path.join(config.galleryDir, galleryId);
+  const galleryDir = path.resolve(path.join(config.galleryDir, galleryId));
   const galleryIndexPath = path.join(galleryDir, "index.html");
 
   log.info(`Generating gallery for ${output.results.length} results`);

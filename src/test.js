@@ -50,7 +50,7 @@ function capturePair(driver, pair, config) {
   return Promise.all(pair.map(makeCapture));
 }
 
-function diffCaptures([base, test]) {
+async function diffCaptures([base, test]) {
   return compare(base, test);
 }
 
