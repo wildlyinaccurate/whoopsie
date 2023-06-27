@@ -63,5 +63,5 @@ function copyImages(galleryDir, result) {
 }
 
 function setFailed(failureThreshold, result) {
-  return set("failed", result.diff.percentage >= failureThreshold / 100, result);
+  return set("failed", result.diff.percentage >= failureThreshold, result);
 }
