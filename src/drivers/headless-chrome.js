@@ -102,14 +102,16 @@ async function loadPage(url, viewport, config) {
   });
 
   // Set all "ignoredSelectors" elements to display: none
-  log.debug(`Hiding ignored selectors: ${JSON.stringify(config.ignoreSelectors)}`);
-  await page.evaluate((selectors) => {
-    selectors.forEach((selector) => {
-      document.querySelectorAll(selector).forEach((element) => {
-        element.style.display = "none";
+  if (config.ignoreSelectors && config.ignoreSelectors.length) {
+    log.debug(`Hiding ignored selectors: ${JSON.stringify(config.ignoreSelectors)}`);
+    await page.evaluate((selectors) => {
+      selectors.forEach((selector) => {
+        document.querySelectorAll(selector).forEach((element) => {
+          element.style.display = "none";
+        });
       });
-    });
-  }, config.ignoreSelectors);
+    }, config.ignoreSelectors);
+  }
 
   // Scroll to the bottom of the page to trigger any lazy-loading
   if (config.scroll) {
