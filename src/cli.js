@@ -1,6 +1,6 @@
+const fs = require("fs-extra");
 const pkg = require("../package.json");
 const log = require("./log");
-
 const test = require("./test");
 const { processFile } = require("./config");
 const identifier = require("./identifier");
@@ -36,26 +36,43 @@ module.exports = function cli(argv) {
     });
 };
 
-function runCommand(command, argv) {
-  const reporters = command === "gallery" ? ["gallery"] : getReporters(argv.reporter);
+async function runCommand(command, argv) {
+  const config = await processFile(argv._[1]);
+
+  if (argv.concurrency) {
+    config.concurrency = argv.concurrency;
+  }
 
   switch (command) {
     case "gallery":
+      return runTestCommand(config, ["gallery"]);
+
     case "test":
-      return processFile(argv._[1])
-        .then((config) => Promise.all([config, test(config, argv)]))
-        .then(([config, output]) => reportOutput(output, config, reporters));
+      return runTestCommand(config, getReporters(argv.reporter));
+
+    case "generate-gallery":
+      return generateGallery(config);
 
     case "validate-config":
       return processFile(argv._[1]).then(() => console.log("Configuration is valid."));
 
     case "version":
-      return Promise.resolve(console.log(pkg.version));
+      return console.log(pkg.version);
 
     case "help":
     default:
-      return Promise.resolve(usage());
+      return usage();
   }
+}
+
+async function runTestCommand(config, reporters) {
+  const output = await test(config);
+
+  return reportOutput(output, config, reporters);
+}
+
+async function generateGallery(config) {
+  return fs.readJSON(config.inFile).then((output) => reporters.gallery(output, config));
 }
 
 function getReporters(reporterNames = DEFAULT_REPORTERS) {

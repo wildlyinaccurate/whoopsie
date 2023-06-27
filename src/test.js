@@ -1,12 +1,11 @@
-const { compose, filter, getOr, map, set } = require("lodash/fp");
-const os = require("os");
+const { compose, filter, map, set } = require("lodash/fp");
 const Queue = require("queue");
 const testPermutations = require("./test-permutations");
 const capture = require("./capture");
 const compare = require("./compare");
 const drivers = require("./drivers");
 
-module.exports = async function test(config, argv) {
+module.exports = async function test(config) {
   const driver = drivers[config.browser];
 
   if (!driver) {
@@ -15,8 +14,7 @@ module.exports = async function test(config, argv) {
 
   const results = [];
   const testPairs = testPermutations(config.sites.slice(0, 2), config.pages, config.viewports);
-  const concurrency = Math.ceil(getOr(os.cpus().length, "concurrency", argv) / 2);
-  const q = new Queue({ concurrency });
+  const q = new Queue({ concurrency: config.concurrency / 2 });
 
   q.on("success", (result) => results.push(...result));
 
@@ -44,7 +42,7 @@ module.exports = async function test(config, argv) {
   });
 };
 
-function capturePair(driver, pair, config) {
+async function capturePair(driver, pair, config) {
   const makeCapture = ([page, viewport]) => capture(driver, page, viewport, config);
 
   return Promise.all(pair.map(makeCapture));
@@ -57,8 +55,8 @@ async function diffCaptures([base, test]) {
 function setPassedAndFailed(failureThreshold) {
   return (result) =>
     compose(
-      set("failed", result.diff.percentage >= failureThreshold / 100),
-      set("passed", result.diff.percentage < failureThreshold / 100)
+      set("failed", result.diff.percentage >= failureThreshold),
+      set("passed", result.diff.percentage < failureThreshold)
     )(result);
 }
 

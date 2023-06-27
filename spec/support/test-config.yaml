@@ -9,7 +9,7 @@ viewports:
   - width: 240
   - width: 320
 
-renderWaitTime: 0
-galleryDir: results/
+networkIdleTimeout: 0
+outDir: results/
 failureThreshold: 10
 fuzz: 5

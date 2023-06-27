@@ -22,7 +22,7 @@ const mockDiff = (percentage) => {
 };
 
 const mockConfig = {
-  galleryDir: "/tmp/whoopsie-test",
+  outDir: "/tmp/whoopsie-test",
   failureThreshold: 10,
 };
 
@@ -32,8 +32,8 @@ describe("galleryReporter()", () => {
   });
 
   it("should order results by highest difference", (done) => {
-    const diff1 = mockDiff(0.08);
-    const diff2 = mockDiff(0.1);
+    const diff1 = mockDiff(8);
+    const diff2 = mockDiff(10);
     const mockOutput = {
       results: [diff1, diff2],
     };
@@ -41,8 +41,8 @@ describe("galleryReporter()", () => {
     galleryReporter(mockOutput, mockConfig).then(() => {
       const results = templateSpy.calls.argsFor(0)[0].results;
 
-      expect(results[0].diff.percentage).toEqual(0.1);
-      expect(results[1].diff.percentage).toEqual(0.08);
+      expect(results[0].diff.percentage).toEqual(10);
+      expect(results[1].diff.percentage).toEqual(8);
 
       done();
     });
@@ -50,7 +50,7 @@ describe("galleryReporter()", () => {
 
   it("should correctly identify failures based on the threshold", (done) => {
     const mockOutput = {
-      results: [mockDiff(0.08), mockDiff(0.1)],
+      results: [mockDiff(8), mockDiff(10)],
     };
 
     galleryReporter(mockOutput, mockConfig).then(() => {

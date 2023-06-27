@@ -53,6 +53,12 @@ ignoreSelectors:
   - '.nw-c-breaking-news-banner'
   - '#breaking-news-container'
 
+# Where to store Whoopsie output
+outDir: whoopsie/
+
+# Input file for the generate-gallery command
+inFile: whoopsie/results.json
+
 # How different two pages should be (as a percentage) for a test to fail
 failureThreshold: 10
 

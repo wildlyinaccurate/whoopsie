@@ -1,22 +1,25 @@
 const fs = require("fs");
+const os = require("os");
 const schema = require("validate");
 const yaml = require("js-yaml");
 
 const DEFAULT_CONFIG = {
-  browser: "HeadlessChrome",
   blockRequests: [],
+  browser: "HeadlessChrome",
+  concurrency: os.cpus().length,
   failureThreshold: 10,
-  networkIdleTimeout: 4000,
   fuzz: 5,
-  galleryDir: "results/",
   headless: true,
   ignoreSelectors: [],
+  inFile: "whoopsie/results.json",
+  networkIdleTimeout: 500,
+  outDir: "whoopsie/",
   scroll: true,
 };
 
 // process :: Object -> Promise<Object>
 module.exports.process = function process(config) {
-  const mergedConfig = Object.assign({}, DEFAULT_CONFIG, config);
+  const mergedConfig = { ...DEFAULT_CONFIG, ...config };
 
   return new Promise((resolve, reject) => {
     const errors = makeSchema().validate(mergedConfig);
@@ -30,7 +33,7 @@ module.exports.process = function process(config) {
 };
 
 // processFile :: String -> Promise<Object>
-module.exports.processFile = function processFile(path) {
+module.exports.processFile = async function processFile(path) {
   return readConfigFile(path).then(yaml.safeLoad).then(module.exports.process);
 };
 
@@ -76,10 +79,14 @@ function makeSchema() {
       message: 'A value is required for "browser"',
     },
 
-    galleryDir: {
+    inFile: {
+      type: "string",
+    },
+
+    outDir: {
       type: "string",
       required: true,
-      message: 'A value is required for "galleryDir"',
+      message: 'A value is required for "outDir"',
     },
 
     failureThreshold: {
@@ -90,8 +97,7 @@ function makeSchema() {
 
     networkIdleTimeout: {
       type: "number",
-      required: true,
-      message: 'A value is required for "networkIdleTimeout"',
+      message: 'The value for for "networkIdleTimeout" must be numeric',
     },
 
     ignoreSelectors: {
@@ -101,17 +107,22 @@ function makeSchema() {
 
     renderWaitTime: {
       type: "number",
-      message: 'The value for "renderWaitTime" must be a number',
+      message: 'The value for "renderWaitTime" must be numeric',
     },
 
     fuzz: {
       type: "number",
-      message: 'The value for "fuzz" must be a number',
+      message: 'The value for "fuzz" must be numeric',
     },
 
     headless: {
       type: "boolean",
       message: 'The value for "headless" must be a boolean',
+    },
+
+    scroll: {
+      type: "boolean",
+      message: 'The value for "scroll" must be a boolean',
     },
   });
 }

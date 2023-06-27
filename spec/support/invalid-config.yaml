@@ -14,7 +14,7 @@ ignoreSelectors:
 
 renderWaitTime: 3000
 
-galleryDir: results/
+outDir: results/
 
 failureThreshold: 10
 
