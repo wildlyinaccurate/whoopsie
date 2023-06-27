@@ -11,6 +11,7 @@ const DEFAULT_CONFIG = {
   galleryDir: "results/",
   headless: true,
   ignoreSelectors: [],
+  scroll: true,
 };
 
 // process :: Object -> Promise<Object>

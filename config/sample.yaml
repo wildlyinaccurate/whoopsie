@@ -63,5 +63,8 @@ networkIdleTimeout: 3000
 # See http://www.imagemagick.org/Usage/color_basics/#fuzz for a full explanation
 fuzz: 5
 
+# Whether to scroll to the end of the page before capturing a screenshot
+scroll: true
+
 # Whether to run the capture process in headless mode
 headless: true

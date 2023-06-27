@@ -112,20 +112,22 @@ async function loadPage(url, viewport, config) {
   }, config.ignoreSelectors);
 
   // Scroll to the bottom of the page to trigger any lazy-loading
-  log.debug("Scrolling to page end");
-  await page.evaluate(() => {
-    window.scrollTo(0, document.body.clientHeight);
-  });
-
-  // Wait for any navigation triggered by lazy-loading to finish
-  log.debug(`Waiting for network idle in case of lazy-loaded content (${config.networkIdleTimeout} ms)`);
-  try {
-    await page.waitForNetworkIdle({
-      idleTime: config.networkIdleTimeout,
+  if (config.scroll) {
+    log.debug("Scrolling to page end");
+    await page.evaluate(() => {
+      window.scrollTo(0, document.body.clientHeight);
     });
-  } catch (error) {
-    log.error(`Headless Chrome timed out while loading ${url} at ${width}px`);
-    log.debug(error);
+
+    // Wait for any navigation triggered by lazy-loading to finish
+    log.debug(`Waiting for network idle in case of lazy-loaded content (${config.networkIdleTimeout} ms)`);
+    try {
+      await page.waitForNetworkIdle({
+        idleTime: config.networkIdleTimeout,
+      });
+    } catch (error) {
+      log.error(`Headless Chrome timed out while loading ${url} at ${width}px`);
+      log.debug(error);
+    }
   }
 
   return page;
