@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
 const PNG = require("pngjs").PNG;
 const pixelmatch = require("pixelmatch");
@@ -11,26 +11,49 @@ module.exports = function compareCaptures(baseCaptures, testCaptures) {
 };
 
 // compare :: CaptureResult -> CaptureResult -> CompareResult
-function compare(baseCapture, testCapture) {
+async function compare(baseCapture, testCapture) {
   const compareId = identifier("compare");
 
   log.info(`Comparing captures of ${baseCapture.page.url} and ${testCapture.page.url}`);
   log.debug(`Compare identifier is ${compareId}`);
   log.time(compareId);
 
-  const expectedImage = PNG.sync.read(fs.readFileSync(baseCapture.imagePath));
-  const actualImage = PNG.sync.read(fs.readFileSync(testCapture.imagePath));
-  const { width, height } = expectedImage;
-  const diffImage = new PNG({ width, height });
+  const [baseImageData, testImageData] = await Promise.all([
+    fs.readFile(baseCapture.imagePath),
+    fs.readFile(testCapture.imagePath),
+  ]);
 
-  const diffPixels = pixelmatch(expectedImage.data, actualImage.data, diffImage.data, width, height);
+  let baseImage = PNG.sync.read(baseImageData);
+  let testImage = PNG.sync.read(testImageData);
+
+  const maxWidth = Math.max(baseImage.width, testImage.width);
+  const maxHeight = Math.max(baseImage.height, testImage.height);
+
+  console.log("before resize", baseImage.data.byteLength, testImage.data.byteLength);
+  if (baseImage.width !== testImage.width) {
+    log.error("Captured images are not the same width. Cannot proceed.");
+  }
+
+  if (baseImage.height < maxHeight) {
+    log.debug(`Growing base image height from ${baseImage.height}px to ${maxHeight}px`);
+    baseImage = { ...baseImage, height: maxHeight, data: growImageHeight(baseImage, maxHeight) };
+  }
+
+  if (testImage.height < maxHeight) {
+    log.debug(`Growing test image height from ${testImage.height}px to ${maxHeight}px`);
+    testImage = { ...testImage, height: maxHeight, data: growImageHeight(testImage, maxHeight) };
+  }
+  console.log("after resize", baseImage.data.byteLength, testImage.data.byteLength);
+
+  const diffImage = new PNG({ width: maxWidth, height: maxHeight });
+  const diffPixels = pixelmatch(baseImage.data, testImage.data, diffImage.data, maxWidth, maxHeight);
   const diffImagePath = path.join(path.dirname(baseCapture.imagePath), `whoopsie-${compareId}.png`);
   fs.writeFileSync(diffImagePath, PNG.sync.write(diffImage));
 
   try {
     log.timeEnd(compareId);
 
-    const totalPixels = width * height;
+    const totalPixels = maxWidth * maxHeight;
     const diffPercentage = (diffPixels / totalPixels) * 100;
 
     const result = {
@@ -51,4 +74,23 @@ function CompareResult(diff, baseCapture, testCapture) {
   this.base = baseCapture;
   this.test = testCapture;
   this.diff = diff;
+}
+
+function growImageHeight(image, targetHeight) {
+  const heightDiff = targetHeight - image.height;
+  const diffBuffer = new Uint8Array(heightDiff * image.width * 4);
+
+  for (let y = 0; y < heightDiff; y++) {
+    for (let x = 0; x < image.width; x++) {
+      const yi = (x + y) * 4;
+
+      // Add a transparent pixel for each missing pixel
+      diffBuffer[yi + 0] = 0;
+      diffBuffer[yi + 1] = 0;
+      diffBuffer[yi + 2] = 0;
+      diffBuffer[yi + 3] = 0;
+    }
+  }
+
+  return Buffer.concat([image.data, diffBuffer], targetHeight * image.width * 4);
 }
