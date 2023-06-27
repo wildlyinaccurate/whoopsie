@@ -75,17 +75,19 @@ async function loadPage(url, viewport, config) {
     await page.setJavaScriptEnabled(false);
   }
 
-  // Request interceptor to block requests that match the "blockRequests" config
-  page.on("request", (req) => {
-    const matchesRequest = (pattern) => new RegExp(pattern).test(req.url);
+  if (config.blockRequests && config.blockRequests.length) {
+    // Request interceptor to block requests that match the "blockRequests" config
+    page.on("request", (req) => {
+      const matchesRequest = (pattern) => new RegExp(pattern).test(req.url);
 
-    if (some(matchesRequest, config.blockRequests)) {
-      log.debug(`Blocking request ${req.url} on ${url}`);
-      req.abort();
-    } else {
-      req.continue();
-    }
-  });
+      if (some(matchesRequest, config.blockRequests)) {
+        log.debug(`Blocking request ${req.url} on ${url}`);
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+  }
 
   try {
     log.debug(`Loading URL ${url}`);
