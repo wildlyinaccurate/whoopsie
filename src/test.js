@@ -14,7 +14,7 @@ module.exports = async function test(config) {
     throw new Error(`Unsupported browser "${config.browser}"`);
   }
 
-  log.debug(`Running tests in ${config.browser} with concurrency = ${config.concurrency}`);
+  log.info(`Running tests in ${config.browser} with concurrency = ${config.concurrency}`);
 
   const results = [];
   const testPairs = testPermutations(config.sites.slice(0, 2), config.pages, config.viewports);

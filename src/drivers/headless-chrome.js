@@ -107,7 +107,7 @@ async function loadPage(url, viewport, config) {
       timeout: Math.max(config.networkIdleTimeout, 30000),
     });
   } catch (error) {
-    log.error("Timed out while waiting for network idle");
+    log.error(`Timed out while waiting ${config.networkIdleTimeout}ms for network idle`);
     log.debug(error);
   }
 
@@ -138,7 +138,7 @@ async function loadPage(url, viewport, config) {
         timeout: Math.max(config.networkIdleTimeout, 30000),
       });
     } catch (error) {
-      log.error("Timed out while waiting for network idle");
+      log.error(`Timed out while waiting ${config.networkIdleTimeout}ms for network idle`);
       log.debug(error);
     }
   }
