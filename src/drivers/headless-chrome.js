@@ -68,7 +68,6 @@ async function loadPage(url, viewport, config) {
 
   log.debug("Setting up page");
   const page = await browser.newPage();
-  await page.setRequestInterception(true);
   await page.setViewport({ width, height });
 
   if (viewport.javascriptDisabled) {
@@ -76,6 +75,8 @@ async function loadPage(url, viewport, config) {
   }
 
   if (config.blockRequests && config.blockRequests.length) {
+    await page.setRequestInterception(true);
+
     // Request interceptor to block requests that match the "blockRequests" config
     page.on("request", (req) => {
       const matchesRequest = (pattern) => new RegExp(pattern).test(req.url);
