@@ -1,12 +1,11 @@
 const fs = require("fs");
-const os = require("os");
 const schema = require("validate");
 const yaml = require("js-yaml");
 
 const DEFAULT_CONFIG = {
   blockRequests: [],
   browser: "HeadlessChrome",
-  concurrency: Math.min(os.cpus().length, 4),
+  concurrency: 4,
   failureThreshold: 10,
   fuzz: 5,
   headless: true,

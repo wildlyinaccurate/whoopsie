@@ -8,11 +8,11 @@ const minimumValidConfig = {
 
 describe("config.processFile()", () => {
   it("should accept a valid config file", (done) => {
-    config.processFile("config/sample.yaml").then(done);
+    config.processFile("config/sample.yml").then(done);
   });
 
   it("should reject an invalid config file", (done) => {
-    config.processFile("spec/support/invalid-config.yaml").catch(done);
+    config.processFile("spec/support/invalid-config.yml").catch(done);
   });
 
   it("should reject when the file does not exist", (done) => {

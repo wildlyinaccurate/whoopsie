@@ -5,15 +5,16 @@ const test = require("./test");
 const { processFile } = require("./config");
 const identifier = require("./identifier");
 const reporters = require("./reporters");
+const { getOr } = require("lodash/fp");
 
 const DEFAULT_REPORTERS = ["json"];
 
 module.exports = function cli(argv) {
-  if (argv.verbose) {
+  if (argv.verbose || argv.v) {
     log.level = log.INFO;
-  } else if (argv.debug) {
+  } else if (argv.debug || argv.vv) {
     log.level = log.DEBUG;
-  } else if (argv.quiet) {
+  } else if (argv.quiet || argv.q) {
     log.level = log.ERROR;
   }
 
@@ -37,24 +38,30 @@ module.exports = function cli(argv) {
 };
 
 async function runCommand(command, argv) {
-  const config = await processFile(argv._[1]);
+  const getConfig = async () => {
+    const configPath = getOr(getOr(".whoopsie-config.yml", "c", argv), "config", argv);
+    log.debug(`Reading config from ${configPath}`);
+    const config = await processFile(configPath);
 
-  if (argv.concurrency) {
-    config.concurrency = argv.concurrency;
-  }
+    if (argv.concurrency) {
+      config.concurrency = argv.concurrency;
+    }
+
+    return config;
+  };
 
   switch (command) {
     case "gallery":
-      return runTestCommand(config, ["gallery"]);
+      return runTestCommand(await getConfig(), ["gallery"]);
 
     case "test":
-      return runTestCommand(config, getReporters(argv.reporter));
+      return runTestCommand(await getConfig(), getReporters(argv.reporter));
 
     case "generate-gallery":
-      return generateGallery(config);
+      return generateGallery(await getConfig());
 
     case "validate-config":
-      return processFile(argv._[1]).then(() => console.log("Configuration is valid."));
+      return getConfig().then(() => console.log("Configuration is valid."));
 
     case "version":
       return console.log(pkg.version);
