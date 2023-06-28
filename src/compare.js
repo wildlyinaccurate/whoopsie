@@ -30,7 +30,7 @@ async function compare(baseCapture, testCapture) {
   const maxHeight = Math.max(baseImage.height, testImage.height);
 
   if (baseImage.width !== testImage.width) {
-    log.error("Captured images are not the same width. Cannot proceed.");
+    log.warn("Captured images are not the same width. Cannot proceed.");
   }
 
   if (baseImage.height < maxHeight) {

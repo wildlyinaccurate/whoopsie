@@ -94,22 +94,14 @@ async function loadPage(url, viewport, config) {
     log.info(`Loading URL ${url}`);
     await page.goto(url);
   } catch (e) {
-    log.error(`Failed to load ${url} at ${width}px. Reloading page to try again.`);
+    log.warn(`Failed to load ${url} at ${width}px. Reloading page to try again.`);
     log.debug(e);
 
     await page.reload();
   }
 
   log.debug(`Waiting for network idle (${config.networkIdleTimeout} ms)`);
-  try {
-    await page.waitForNetworkIdle({
-      idleTime: config.networkIdleTimeout,
-      timeout: Math.max(config.networkIdleTimeout, 30000),
-    });
-  } catch (error) {
-    log.error(`Timed out while waiting ${config.networkIdleTimeout}ms for network idle`);
-    log.debug(error);
-  }
+  await waitForNetworkIdle(page, config);
 
   // Set all "ignoredSelectors" elements to display: none
   if (config.ignoreSelectors && config.ignoreSelectors.length) {
@@ -132,16 +124,22 @@ async function loadPage(url, viewport, config) {
 
     // Wait for any navigation triggered by lazy-loading to finish
     log.debug(`Waiting for network idle in case of lazy-loaded content (${config.networkIdleTimeout} ms)`);
-    try {
-      await page.waitForNetworkIdle({
-        idleTime: config.networkIdleTimeout,
-        timeout: Math.max(config.networkIdleTimeout, 30000),
-      });
-    } catch (error) {
-      log.error(`Timed out while waiting ${config.networkIdleTimeout}ms for network idle`);
-      log.debug(error);
-    }
+    await waitForNetworkIdle(page, config);
   }
 
   return page;
+}
+
+async function waitForNetworkIdle(page, config) {
+  const timeout = Math.max(config.networkIdleTimeout, 30000);
+
+  try {
+    await page.waitForNetworkIdle({
+      idleTime: config.networkIdleTimeout,
+      timeout,
+    });
+  } catch (error) {
+    log.warn(`Timed out while waiting ${timeout}ms for ${config.networkIdleTimeout}ms of network idle time`);
+    log.debug(error);
+  }
 }
