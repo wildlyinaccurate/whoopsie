@@ -11,8 +11,6 @@ Whoopsie is a visual regression tool for testing responsive web sites.
 $ npm install -g whoopsie
 ```
 
-> **Note:** Whoopsie requires Node.js 8 or higher and a recent version of ImageMagick.
-
 ## Configuration
 
 See [config/sample.yaml](./config/sample.yaml) for a sample configuration file.
@@ -35,6 +33,14 @@ Run visual regression tests. Uses the `json` reporter by default.
 
 ```
 $ whoopsie test path/to/config.yaml
+```
+
+#### `generate-gallery`
+
+Generate a gallery from the JSON output of `whoopsie test`. Useful if you generate JSON results in CI and want to view the results in a gallery locally.
+
+```
+$ whoopsie generate-gallery path/to/config.yaml
 ```
 
 #### `validate-config`
