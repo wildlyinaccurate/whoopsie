@@ -21,7 +21,7 @@ function makeTuple([page, viewport, site]) {
   siteUrl.query = merge(siteUrl.query, pathUrl.query);
   siteUrl.search = undefined;
 
-  return [set("url", format(siteUrl), page), viewport];
+  return [set("url", format(siteUrl), page), viewport, page.path];
 }
 
 function mergePathnames(path1, path2) {

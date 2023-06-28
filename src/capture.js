@@ -4,10 +4,8 @@ const log = require("./log");
 const identifier = require("./identifier");
 
 module.exports = async function capture(driver, page, viewport, config) {
-  const { width } = viewport;
   const captureId = identifier("capture");
 
-  log.info(`Capturing ${page.url} at ${width}px`);
   log.debug(`Capture identifier is ${captureId}`);
   log.time(captureId);
 

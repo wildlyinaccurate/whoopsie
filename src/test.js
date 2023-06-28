@@ -4,17 +4,21 @@ const testPermutations = require("./test-permutations");
 const capture = require("./capture");
 const compare = require("./compare");
 const drivers = require("./drivers");
+const log = require("./log");
 
 module.exports = async function test(config) {
   const driver = drivers[config.browser];
+  const concurrency = Math.ceil(config.concurrency / 2);
 
   if (!driver) {
     throw new Error(`Unsupported browser "${config.browser}"`);
   }
 
+  log.debug(`Running tests in ${config.browser} with concurrency = ${config.concurrency}`);
+
   const results = [];
   const testPairs = testPermutations(config.sites.slice(0, 2), config.pages, config.viewports);
-  const q = new Queue({ concurrency: config.concurrency / 2 });
+  const q = new Queue({ concurrency });
 
   q.on("success", (result) => results.push(...result));
 
@@ -23,8 +27,11 @@ module.exports = async function test(config) {
   testPairs.forEach((pair) => {
     // Viewport is the same for both tuples
     const viewport = pair[0][1];
+    const page = pair[0][2];
 
     q.push((cb) => {
+      log.notice(`Testing ${page} at ${viewport.width}px`);
+
       capturePair(driver, pair, config)
         .then(diffCaptures)
         .then(map(set("viewport", viewport)))

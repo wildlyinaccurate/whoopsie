@@ -90,10 +90,11 @@ async function loadPage(url, viewport, config) {
   }
 
   try {
-    log.debug(`Loading URL ${url}`);
+    log.info(`Loading URL ${url}`);
     await page.goto(url);
   } catch (e) {
     log.error(`Failed to load ${url} at ${width}px. Reloading page to try again.`);
+    log.debug(e);
 
     await page.reload();
   }
