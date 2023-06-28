@@ -13,7 +13,13 @@ $ npm install -g whoopsie
 
 ## Configuration
 
-See [config/sample.yaml](./config/sample.yaml) for a sample configuration file.
+By default Whoopsie will read configuration from `.whoopsie-config.yml` in the current directory. See [config/sample.yml](./config/sample.yml) for a sample configuration file.
+
+Configuration can be loaded from another path with the `--config` or `-c` flag:
+
+```
+$ whoopsie test -c path/to/config.yml
+```
 
 ## Usage
 
@@ -24,7 +30,7 @@ See [config/sample.yaml](./config/sample.yaml) for a sample configuration file.
 Run visual regression tests and generate an HTML gallery containing the results. This command is an alias for `whoopsie test --reporter gallery`.
 
 ```
-$ whoopsie gallery path/to/config.yaml
+$ whoopsie gallery
 ```
 
 #### `test`
@@ -32,7 +38,7 @@ $ whoopsie gallery path/to/config.yaml
 Run visual regression tests. Uses the `json` reporter by default.
 
 ```
-$ whoopsie test path/to/config.yaml
+$ whoopsie test
 ```
 
 #### `generate-gallery`
@@ -40,7 +46,7 @@ $ whoopsie test path/to/config.yaml
 Generate a gallery from the JSON output of `whoopsie test`. Useful if you generate JSON results in CI and want to view the results in a gallery locally.
 
 ```
-$ whoopsie generate-gallery path/to/config.yaml
+$ whoopsie generate-gallery
 ```
 
 #### `validate-config`
@@ -48,18 +54,18 @@ $ whoopsie generate-gallery path/to/config.yaml
 Check that the configuration file is valid.
 
 ```
-$ whoopsie validate-config path/to/config.yaml
+$ whoopsie validate-config
 ```
 
 ### Options
 
-| Name            | Default value      | Description                                     |
-|-----------------|--------------------|-------------------------------------------------|
-| `--reporter`    | `json`             | Test result reporter(s) to use.                 |
-| `--concurrency` | `os.cpus().length` | Number of tests to run concurrently             |
-| `--verbose`     | `<Off>`            | Print extra information while running           |
-| `--debug`       | `<Off>`            | Print extra debugging information while running |
-| `--quiet`       | `<Off>`            | Only print errors while running                 |
+| Name                    | Default value      | Description                                              |
+|-------------------------|--------------------|----------------------------------------------------------|
+| `--reporter` or `r`     | `json`             | Test result reporter(s) to use                           |
+| `--concurrency` or `-C` | `4`                | Number of tests to run concurrently                      |
+| `--verbose` or `-v`     | `<Off>`            | Print extra information while running                    |
+| `--debug` or `-vv`      | `<Off>`            | Print extra information and debug messages while running |
+| `--quiet` or `-q`       | `<Off>`            | Only print errors while running                          |
 
 ## Reporters
 
@@ -141,7 +147,7 @@ If you prefer to run Whoopsie in a container, you can use the official Docker im
 $ docker pull wildlyinaccurate/whoopsie
 $ docker run --rm --volume $PWD:/whoopsie --workdir /whoopsie \
     wildlyinaccurate/whoopsie \
-    whoopsie gallery /whoopsie/path/to/config.yaml
+    whoopsie gallery
 ```
 
 ## License

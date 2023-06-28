@@ -9,7 +9,7 @@ before_script:
 
 script:
   - npm run test
-  # - node bin/whoopsie.js gallery spec/support/test-config.yaml --debug
+  # - node bin/whoopsie.js gallery --config spec/support/test-config.yml --debug
 
 notifications:
   email: false
