@@ -1,6 +1,6 @@
 {
   "name": "whoopsie",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Whoopsie is a visual regression tool for testing responsive web sites",
   "main": "src/index.js",
   "bin": "./bin/whoopsie.js",
