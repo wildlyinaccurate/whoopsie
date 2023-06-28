@@ -6,7 +6,7 @@ const yaml = require("js-yaml");
 const DEFAULT_CONFIG = {
   blockRequests: [],
   browser: "HeadlessChrome",
-  concurrency: os.cpus().length,
+  concurrency: Math.min(os.cpus().length, 4),
   failureThreshold: 10,
   fuzz: 5,
   headless: true,
@@ -77,6 +77,11 @@ function makeSchema() {
       type: "string",
       required: true,
       message: 'A value is required for "browser"',
+    },
+
+    concurrency: {
+      type: "number",
+      required: true,
     },
 
     inFile: {
