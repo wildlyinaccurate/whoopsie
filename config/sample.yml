@@ -18,6 +18,10 @@ pages:
       - .nw-c-full-story
       - .nw-c-most-read
 
+  # Pages can be named to make test results easier to read
+  - path: /news
+    name: News Index
+
 # Viewport configurations to run tests with
 # Each viewport can have the following properties:
 #  - width (required)

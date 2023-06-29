@@ -29,7 +29,7 @@ module.exports = async function test(config) {
     const [page, viewport] = pair[0];
 
     q.push((cb) => {
-      log.notice(`Testing ${page.path} at ${viewport.width}px`);
+      log.notice(`Testing ${page.name || page.path} at ${viewport.width}px`);
 
       capturePair(driver, pair, config)
         .then(diffCaptures)
