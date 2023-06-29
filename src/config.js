@@ -105,6 +105,11 @@ function makeSchema() {
       message: 'The value for for "networkIdleTimeout" must be numeric',
     },
 
+    maxNetworkIdleWait: {
+      type: "number",
+      message: 'The value for for "maxNetworkIdleWait" must be numeric',
+    },
+
     ignoreSelectors: {
       type: "array",
       message: 'The value for "ignoreSelectors" must be an array',
