@@ -135,7 +135,7 @@ async function waitForNetworkIdle(page, config) {
       timeout,
     });
   } catch (error) {
-    log.warn(`Timed out while waiting ${timeout}ms for ${config.networkIdleTimeout}ms of network idle time`);
+    log.warning(`Timed out while waiting ${timeout}ms for ${config.networkIdleTimeout}ms of network idle time`);
     log.debug(error);
   }
 }
