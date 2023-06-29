@@ -1,5 +1,5 @@
 const { format, parse } = require("url");
-const { chunk, merge, set } = require("lodash/fp");
+const { chunk, merge } = require("lodash/fp");
 const product = require("cartesian-product");
 
 // Generate a list of pairs which contain (url, viewport) tuples representing all
@@ -21,7 +21,7 @@ function makeTuple([page, viewport, site]) {
   siteUrl.query = merge(siteUrl.query, pathUrl.query);
   siteUrl.search = undefined;
 
-  return [set("url", format(siteUrl), page), viewport];
+  return [{ ...page, url: format(siteUrl), site }, viewport];
 }
 
 function mergePathnames(path1, path2) {

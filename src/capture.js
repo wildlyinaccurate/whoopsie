@@ -8,9 +8,7 @@ module.exports = async function capture(driver, page, viewport, config) {
 
   log.debug(`Capture identifier is ${captureId}`);
   log.time(captureId);
-
   const results = await doCapture(driver, captureId, page, viewport, config);
-
   log.timeEnd(captureId);
 
   return results;
