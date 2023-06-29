@@ -30,10 +30,15 @@ async function cleanUp() {
 async function capturePage(imagePath, url, viewport, config) {
   const page = await loadPage(url, viewport, config);
 
-  await page.screenshot({
-    path: imagePath,
-    fullPage: true,
-  });
+  try {
+    await page.screenshot({
+      path: imagePath,
+      fullPage: true,
+    });
+  } catch (e) {
+    log.error(`Failed to capture full page screenshot for ${url}`);
+    log.debug(e);
+  }
 
   await page.close();
 }
@@ -49,10 +54,15 @@ async function captureSelectors(selectors, url, viewport, config) {
       return JSON.stringify({ ...rect, y: rect.y + window.pageYOffset });
     }, selector.selector);
 
-    return page.screenshot({
-      clip: JSON.parse(boundingClientRect),
-      path: selector.imagePath,
-    });
+    try {
+      return page.screenshot({
+        clip: JSON.parse(boundingClientRect),
+        path: selector.imagePath,
+      });
+    } catch (e) {
+      log.error(`Failed to capture screenshot of selector ${selector.selector} for ${url}`);
+      log.debug(e);
+    }
   });
 
   return Promise.all(capturePromises).then(() => page.close());
