@@ -11,6 +11,7 @@ const DEFAULT_CONFIG = {
   headless: true,
   ignoreSelectors: [],
   inFile: "whoopsie/results.json",
+  maxNetworkIdleWait: 10000,
   networkIdleTimeout: 500,
   outDir: "whoopsie/",
   scroll: true,

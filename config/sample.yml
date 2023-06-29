@@ -69,6 +69,9 @@ failureThreshold: 10
 # How many milliseconds the network should be idle for before capturing the page
 networkIdleTimeout: 3000
 
+# The maximum amount of milliseconds to wait for the network to be idle
+maxNetworkIdleWait: 10000
+
 # How much fuzz should be applied when calculating differences
 # See http://www.imagemagick.org/Usage/color_basics/#fuzz for a full explanation
 fuzz: 5

@@ -127,15 +127,15 @@ async function loadPage(url, viewport, config) {
 }
 
 async function waitForNetworkIdle(page, config) {
-  const timeout = Math.max(config.networkIdleTimeout, 30000);
-
   try {
     await page.waitForNetworkIdle({
       idleTime: config.networkIdleTimeout,
-      timeout,
+      timeout: config.maxNetworkIdleWait,
     });
   } catch (error) {
-    log.warning(`Timed out while waiting ${timeout}ms for ${config.networkIdleTimeout}ms of network idle time`);
+    log.warning(
+      `Timed out while waiting ${config.maxNetworkIdleWait}ms for ${config.networkIdleTimeout}ms of network idle time`
+    );
     log.debug(error);
   }
 }
