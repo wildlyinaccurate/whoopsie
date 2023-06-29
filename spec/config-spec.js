@@ -61,5 +61,5 @@ describe("config.process()", () => {
 });
 
 function modifyConfig(changes) {
-  return Object.assign({}, minimumValidConfig, changes);
+  return { ...minimumValidConfig, ...changes };
 }

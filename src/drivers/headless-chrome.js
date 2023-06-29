@@ -46,11 +46,7 @@ async function captureSelectors(selectors, url, viewport, config) {
       const element = document.querySelector(selector);
       const rect = element.getBoundingClientRect();
 
-      return JSON.stringify(
-        Object.assign(rect, {
-          y: rect.y + window.pageYOffset,
-        })
-      );
+      return JSON.stringify({ ...rect, y: rect.y + window.pageYOffset });
     }, selector.selector);
 
     return page.screenshot({
