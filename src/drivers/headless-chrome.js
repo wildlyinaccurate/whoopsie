@@ -16,6 +16,7 @@ let browser = null;
 async function initialise(config) {
   browser = await puppeteer.launch({
     headless: config.headless ? "new" : false,
+    ignoreHTTPSErrors: true,
   });
 
   const version = await browser.version();
