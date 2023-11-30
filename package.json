@@ -38,9 +38,9 @@
     "log": "^1.4.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "puppeteer": "^0.10.1",
+    "puppeteer": "^18.2.0",
     "queue": "^4.0.0",
-    "validate": "^3.0.1",
+    "validate": "^5.2.0",
     "snyk": "^1.234.0"
   },
   "devDependencies": {
